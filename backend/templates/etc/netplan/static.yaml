@@ -1,0 +1,13 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      addresses:
+        - %IP4_ADDRESS%/%IP4_NETWORK_BITS%
+      routes:
+        - to: default
+          via: %IP4_DEFAULT_GATEWAY%
+      nameservers:
+          search: [%DNS_SEARCH%]
+          addresses: [%IP4_DNS_ADDRESSES%]
