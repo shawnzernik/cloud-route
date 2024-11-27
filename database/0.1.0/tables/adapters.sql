@@ -1,4 +1,4 @@
-CREATE TABLE "cr_adapters" (
+CREATE TABLE "adapters" (
     "guid" UUID PRIMARY KEY,
 
     "display_name" VARCHAR(250) NOT NULL,

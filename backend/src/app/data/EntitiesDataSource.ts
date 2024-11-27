@@ -12,6 +12,7 @@ import { PermissionEntity } from "../../tre/data/PermissionEntity";
 import { SecurableEntity } from "../../tre/data/SecurableEntity";
 import { SettingEntity } from "../../tre/data/SettingEntity";
 import { UserEntity } from "../../tre/data/UserEntity";
+import { AdapterEntity } from "./AdapterEntity";
 
 export class EntitiesDataSource extends TreEntitiesDataSource {
     public constructor(options?: DataSourceOptions) {
@@ -34,6 +35,7 @@ export class EntitiesDataSource extends TreEntitiesDataSource {
                 ListFilterEntity,
                 SettingEntity,
                 LogEntity,
+                AdapterEntity,
 
                 // add app entities here
             ],

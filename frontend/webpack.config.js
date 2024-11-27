@@ -55,6 +55,7 @@ module.exports = {
         markdown: "./src/tre/pages/markdown.tsx",
 
         // add app pages
+        adapter: "./src/app/pages/adapter.tsx",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -149,5 +150,11 @@ module.exports = {
         }),
 
         // add app pages
+        new HtmlWebpackPlugin({
+            template: "./src/app/template.html",
+            filename: "../static/app/pages/adapter.html",
+            chunks: ["common", "adapter"],
+            title: "Adapter Edit"
+        }),
     ]
 };
