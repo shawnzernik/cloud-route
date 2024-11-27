@@ -13,3 +13,4 @@ backend/dataset.jsonl
 temp
 database/temp.sql
 frontend/static/app/pages
+setup/cloud-route.zip

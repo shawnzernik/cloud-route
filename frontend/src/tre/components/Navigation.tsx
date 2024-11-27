@@ -247,7 +247,7 @@ export class Navigation extends React.Component<Props, State> {
                         }}
                     >
                         <BootstrapIcon style={NavigationTheme.stageTopMenuIcon} name="list" size={2} />
-                        &nbsp; TypeScript React Express (TRE)
+                        &nbsp; Cloud Route
                     </div>
                     {topMenu}
                 </div>
