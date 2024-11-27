@@ -1,0 +1,22 @@
+{
+    "name": "database",
+    "version": "0.0.1",
+    "scripts": {
+        "build": "npx tsc",
+        "clean": "rm -R node_modules package-lock.json dist coverage",
+        "new": "node dist/index.js new",
+        "update": "node dist/index.js update",
+        "backup": "node dist/index.js backup",
+        "restore": "node dist/index.js restore"
+    },
+    "devDependencies": {
+        "@types/pg": "^8.11.10",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.6.3"
+    },
+    "dependencies": {
+        "common": "file:../common",
+        "pg": "^8.12.0",
+        "typeorm": "^0.3.20"
+    }
+}

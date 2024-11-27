@@ -1,0 +1,133 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "backend website",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "nodemon",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "${workspaceFolder}/backend/src/index.ts"
+            ],
+            "sourceMaps": true,
+            "cwd": "${workspaceFolder}/backend",
+            "protocol": "inspector",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "backend jest",
+            "program": "${workspaceFolder}/backend/node_modules/jest/bin/jest",
+            "args": [
+                "--runInBand"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": [
+                "--inspect-brk=9229"
+            ],
+            "port": 9229,
+            "sourceMaps": true,
+            "cwd": "${workspaceFolder}/backend",
+            "windows": {
+                "program": "${workspaceFolder}/backend/node_modules/jest/bin/jest.cmd"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "database new",
+            "program": "${workspaceFolder}/database/dist/index.js",
+            "args": [
+                "new"
+            ],
+            "cwd": "${workspaceFolder}/database",
+            "sourceMaps": true,
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceFolder}/database/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "database build"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "database backup",
+            "program": "${workspaceFolder}/database/dist/index.js",
+            "args": [
+                "backup",
+                "TestBackup.sql"
+            ],
+            "cwd": "${workspaceFolder}/database",
+            "sourceMaps": true,
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceFolder}/database/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "database build"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "database restore",
+            "program": "${workspaceFolder}/database/dist/index.js",
+            "args": [
+                "restore",
+                "TestBackup.sql"
+            ],
+            "cwd": "${workspaceFolder}/database",
+            "sourceMaps": true,
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceFolder}/database/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "database build"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "database upgrade",
+            "program": "${workspaceFolder}/database/dist/index.js",
+            "args": [
+                "upgrade",
+            ],
+            "cwd": "${workspaceFolder}/database",
+            "sourceMaps": true,
+            "protocol": "inspector",
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceFolder}/database/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": "database build"
+        }
+    ]
+}

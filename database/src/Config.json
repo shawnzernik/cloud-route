@@ -1,0 +1,41 @@
+{
+    "0.0.0": [
+        "0.0.0/manager_versions.sql"
+    ],
+    "0.0.1": [
+        "0.0.1/tables/groups.sql",
+        "0.0.1/tables/memberships.sql",
+        "0.0.1/tables/passwords.sql",
+        "0.0.1/tables/permissions.sql",
+        "0.0.1/tables/securables.sql",
+        "0.0.1/tables/users.sql",
+        "0.0.1/tables/menus.sql",
+        "0.0.1/tables/settings.sql",
+        "0.0.1/tables/lists.sql",
+        "0.0.1/tables/list_filters.sql",
+        "0.0.1/tables/logs.sql",
+        "0.0.1/foreignkeys/memberships.sql",
+        "0.0.1/foreignkeys/passwords.sql",
+        "0.0.1/foreignkeys/permissions.sql",
+        "0.0.1/foreignkeys/menus.sql",
+        "0.0.1/foreignkeys/list_filters.sql",
+        "0.0.1/data/securables.sql",
+        "0.0.1/data/menus.sql",
+        "0.0.1/data/administrator.sql",
+        "0.0.1/data/anonymous.sql",
+        "0.0.1/data/lists.sql",
+        "0.0.1/data/settings.sql",
+        "0.0.1/data/list_filters.sql"
+    ],
+    "0.0.2": [
+        "0.0.2/tables/contents.sql",
+        "0.0.2/tables/payloads.sql",
+        "0.0.2/data/settings.sql",
+        "0.0.2/data/securables.sql",
+        "0.0.2/data/markdowns.sql",
+        "0.0.2/data/menus.sql",
+        "0.0.2/data/lists.sql",
+        "0.0.2/data/administrator.sql"
+    ]
+
+}
