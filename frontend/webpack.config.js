@@ -39,9 +39,7 @@ module.exports = {
     },
     entry: {
         login: "./src/tre/pages/login.tsx",
-        copyright: "./src/tre/pages/copyright.tsx",
         account: "./src/tre/pages/account.tsx",
-        help: "./src/tre/pages/help.tsx",
         lists: "./src/tre/pages/lists.tsx",
         memberships: "./src/tre/pages/memberships.tsx",
         permissions: "./src/tre/pages/permissions.tsx",
@@ -55,7 +53,7 @@ module.exports = {
         markdown: "./src/tre/pages/markdown.tsx",
 
         // add app pages
-        adapter: "./src/app/pages/adapter.tsx",
+        system: "./src/app/pages/system.tsx",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -66,21 +64,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: "./src/tre/template.html",
-            filename: "../static/tre/pages/copyright.html",
-            chunks: ["common", "copyright"],
-            title: "Copyright & License"
-        }),
-        new HtmlWebpackPlugin({
-            template: "./src/tre/template.html",
             filename: "../static/tre/pages/account.html",
             chunks: ["common", "account"],
             title: "My Account"
-        }),
-        new HtmlWebpackPlugin({
-            template: "./src/tre/template.html",
-            filename: "../static/tre/pages/help.html",
-            chunks: ["common", "help"],
-            title: "Help"
         }),
         new HtmlWebpackPlugin({
             template: "./src/tre/template.html",
@@ -152,9 +138,9 @@ module.exports = {
         // add app pages
         new HtmlWebpackPlugin({
             template: "./src/app/template.html",
-            filename: "../static/app/pages/adapter.html",
-            chunks: ["common", "adapter"],
-            title: "Adapter Edit"
+            filename: "../static/app/pages/system.html",
+            chunks: ["common", "system"],
+            title: "System"
         }),
     ]
 };

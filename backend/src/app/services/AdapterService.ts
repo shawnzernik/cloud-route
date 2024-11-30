@@ -1,10 +1,10 @@
 import express from "express";
-import Logger from "../../tre/Logger";
 import { BaseService } from "../../tre/services/BaseService";
 import { EntitiesDataSource } from "../data/EntitiesDataSource";
 import { AdapterDto } from "common/src/app/models/AdapterDto";
 import { AdapterEntity } from "../data/AdapterEntity";
 import { AdapterRepository } from "../data/AdapterRepository";
+import { Logger } from "../../tre/Logger";
 
 export class AdapterService extends BaseService {
     protected constructDataSource(): EntitiesDataSource {

@@ -115,8 +115,8 @@ export class AuthService {
             throw new Error("Token has expired! Please log in again.");
         if (expiresMinutesLeft > 2) {
             let cookie = `authorization=Bearer ${token}; path="/"; max-age=3600; SameSite=Strict`;
-            console.log("Cookie Length: " + cookie.length);
-            console.log("Cookie: " + cookie);
+            // console.log("Cookie Length: " + cookie.length);
+            // console.log("Cookie: " + cookie);
             document.cookie = cookie;
             return token;
         }
@@ -125,8 +125,8 @@ export class AuthService {
         AuthService.setToken(newToken);
 
         let cookie = `authorization=Bearer ${newToken}; path="/"; max-age=3600; SameSite=Strict`;
-        console.log("Cookie Length: " + cookie.length);
-        console.log("Cookie: " + cookie);
+        // console.log("Cookie Length: " + cookie.length);
+        // console.log("Cookie: " + cookie);
         document.cookie = cookie;
         return newToken;
     }

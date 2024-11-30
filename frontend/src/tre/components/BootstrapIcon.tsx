@@ -7,6 +7,7 @@ interface Props {
     color?: string;
     className?: string;
     style?: React.CSSProperties;
+    onClick?: any;
 }
 
 interface State { }
@@ -19,6 +20,7 @@ export class BootstrapIcon extends React.Component<Props, State> {
             css = { ...css, color: this.props.color };
 
         return <i
+            onClick={this.props.onClick}
             style={css}
             className={("bi-" + this.props.name + " " + this.props.className).trim()}
         ></i>;

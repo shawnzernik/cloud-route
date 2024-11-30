@@ -77,3 +77,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable cloud-route
 sudo systemctl start cloud-route
 sudo systemctl status cloud-route
+
+set +x
+echo "========================================"
+echo "Making administrator not need password to sudo"
+echo "========================================"
+set -x
+echo "administrator ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/administrator

@@ -16,6 +16,7 @@ import { ContentService } from "./tre/services/ContentService";
 import { ExtendedContentService } from "./tre/services/ExtendedContentService";
 import { PayloadService } from "./tre/services/PayloadService";
 import { AdapterService } from "./app/services/AdapterService";
+import { SystemService } from "./app/services/SystemService";
 
 const app = new WebApp((logger: Logger, app: express.Express) => {
     new AuthService(logger, app);
@@ -32,9 +33,11 @@ const app = new WebApp((logger: Logger, app: express.Express) => {
     new ContentService(logger, app);
     new PayloadService(logger, app);
     new ExtendedContentService(logger, app);
-    new AdapterService(logger, app);    
 
     // add app routes here
+    new AdapterService(logger, app);
+    new SystemService(logger, app);
+
 });
 
 app.execute();

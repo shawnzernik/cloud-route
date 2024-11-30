@@ -1,14 +1,14 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 INSERT INTO "menus" ("guid", "parents_guid", "order", "display", "bootstrap_icon", "url") VALUES
-('b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', NULL, 1, 'Session', 'person-fill', ''),
+('b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', NULL, 0, 'Session', 'person-fill', ''),
 ('db0d6063-2266-4bfb-8c96-44dbb90cddf2', 'b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', 1, 'Login', 'door-open-fill', '/static/tre/pages/login.html'),
 ('ff3f0659-050e-4d60-97df-84cbfbd90c62', 'b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', 2, 'Logout', 'door-closed-fill', '/static/tre/pages/login.html'),
 ('5a8a209b-e6c1-42e4-8bc9-f144feec6d8e', 'b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', 3, 'Copyright', 'c-circle-fill', '/static/tre/pages/copyright.html'),
 ('c30341f3-f40e-4f94-96e5-1e63f9ac899e', 'b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', 4, 'Account', 'person-vcard', '/static/tre/pages/account.html'),
 ('4fa7b2ae-953d-45ed-bc83-2194176b0c59', 'b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3', 5, 'Help', 'question-circle-fill', '/static/tre/pages/help.html'),
 
-('b1e3c680-0f62-4931-8a68-4be9b4b070f7', NULL, 3, 'System', 'gear-fill', ''),
+('b1e3c680-0f62-4931-8a68-4be9b4b070f7', NULL, 2147483647, 'System', 'gear-fill', ''),
 ('67fa4231-5b8e-4639-89cb-5f15a9207a83', 'b1e3c680-0f62-4931-8a68-4be9b4b070f7', 1, 'Users', 'people-fill', '/static/tre/pages/lists.html?url_key=users'),
 ('d7db605a-ec82-4da6-8fae-df4d5bfb173d', 'b1e3c680-0f62-4931-8a68-4be9b4b070f7', 2, 'Groups', 'diagram-3-fill', '/static/tre/pages/lists.html?url_key=groups'),
 ('46c065f9-16cc-4b8b-9f22-421177576460', 'b1e3c680-0f62-4931-8a68-4be9b4b070f7', 3, 'Securables', 'lock-fill', '/static/tre/pages/lists.html?url_key=securables'),

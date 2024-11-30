@@ -6,7 +6,7 @@ export class Config {
     public static appCopyright = Config.setString(process.env.APP_COPYRIGHT, "© Copyright 2024 Shawn Zernik");
     public static appUrl = Config.setString(process.env.APP_URL, "https://localhost:4433");
     public static dbHost = Config.setString(process.env.DB_HOST, "localhost");
-    public static dbName = Config.setString(process.env.DB_NAME, "ts-react-express");
+    public static dbName = Config.setString(process.env.DB_NAME, "cloud-route");
     public static dbPassword = Config.setString(process.env.DB_PASSWORD, "postgres");
     public static dbPort = Config.setInt(process.env.DB_PORT, "5432");
     public static dbUsername = Config.setString(process.env.DB_USERNAME, "postgres");

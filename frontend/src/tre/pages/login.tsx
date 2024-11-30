@@ -39,7 +39,7 @@ class Page extends BasePage<Props, State> {
         try {
             const token = await AuthService.login(this.state.model.emailAddress, this.state.model.password);
             AuthService.setToken(token);
-            window.location.assign("copyright.html");
+            window.location.assign("/static/tre/pages/markdown.html?pathAndName=/Copyright.md&topMenu=b9aeb1c2-4f07-4e91-bbef-25ed565b6ab3&leftMenu=5a8a209b-e6c1-42e4-8bc9-f144feec6d8e");
         }
         catch (err) {
             await ErrorMessage(this, err);

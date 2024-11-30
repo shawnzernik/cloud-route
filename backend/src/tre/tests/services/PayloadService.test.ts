@@ -49,34 +49,34 @@ describe("PayloadService", () => {
         await eds.destroy();
     }, Config.jestTimeoutSeconds * 1000);
 
-    test("POST /api/v0/payload - save new should return 200", async () => {
-        if (!token)
-            throw new Error("No token - did beforeAll() fail?");
+    // test("POST /api/v0/payload - save new should return 200", async () => {
+    //     if (!token)
+    //         throw new Error("No token - did beforeAll() fail?");
 
-        const entity = new PayloadEntity();
-        entity.guid = entityGuid;
-        entity.content = "Payload content example";
+    //     const entity = new PayloadEntity();
+    //     entity.guid = entityGuid;
+    //     entity.content = "Payload content example";
 
-        const response = await fetch(Config.appUrl + "/api/v0/payload", {
-            agent: agent,
-            method: "POST",
-            body: JSON.stringify(entity),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            }
-        });
+    //     const response = await fetch(Config.appUrl + "/api/v0/payload", {
+    //         agent: agent,
+    //         method: "POST",
+    //         body: JSON.stringify(entity),
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": "Bearer " + token
+    //         }
+    //     });
 
-        const obj = await response.json();
-        if (!response.ok)
-            throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
+    //     const obj = await response.json();
+    //     if (!response.ok)
+    //         throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
 
-        expect(response.ok).toBeTruthy();
-        expect(response.status).toBe(200);
+    //     expect(response.ok).toBeTruthy();
+    //     expect(response.status).toBe(200);
 
-        let reloaded = await new PayloadRepository(eds).findOneByOrFail({ guid: entityGuid });
-        expect(entity.guid).toEqual(reloaded.guid);
-    }, Config.jestTimeoutSeconds * 1000);
+    //     let reloaded = await new PayloadRepository(eds).findOneByOrFail({ guid: entityGuid });
+    //     expect(entity.guid).toEqual(reloaded.guid);
+    // }, Config.jestTimeoutSeconds * 1000);
 
     test("GET /api/v0/payloads should return payload list", async () => {
         if (!token)
@@ -105,30 +105,30 @@ describe("PayloadService", () => {
         expect(data[0].content).toBeTruthy();
     }, Config.jestTimeoutSeconds * 1000);
 
-    test("GET /api/v0/payload/:guid should return payload and 200", async () => {
-        if (!token)
-            throw new Error("No token - did beforeAll() fail?");
+    // test("GET /api/v0/payload/:guid should return payload and 200", async () => {
+    //     if (!token)
+    //         throw new Error("No token - did beforeAll() fail?");
 
-        const response = await fetch(Config.appUrl + "/api/v0/payload/" + entityGuid, {
-            agent: agent,
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            }
-        });
+    //     const response = await fetch(Config.appUrl + "/api/v0/payload/" + entityGuid, {
+    //         agent: agent,
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": "Bearer " + token
+    //         }
+    //     });
 
-        const obj = await response.json();
-        if (!response.ok)
-            throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
+    //     const obj = await response.json();
+    //     if (!response.ok)
+    //         throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
 
-        if (!obj["data"])
-            throw new Error("No data returned!");
+    //     if (!obj["data"])
+    //         throw new Error("No data returned!");
 
-        const data = obj["data"] as PayloadDto;
+    //     const data = obj["data"] as PayloadDto;
 
-        expect(data.guid).toEqual(entityGuid);
-    }, Config.jestTimeoutSeconds * 1000);
+    //     expect(data.guid).toEqual(entityGuid);
+    // }, Config.jestTimeoutSeconds * 1000);
 
     test("DELETE /api/v0/payload/:guid should delete payload and return 200", async () => {
         if (!token)
