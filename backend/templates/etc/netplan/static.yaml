@@ -2,7 +2,9 @@ network:
   version: 2
   renderer: networkd
   ethernets:
-    eth0:
+    %DEVICE%:
+      dhcp4: false
+      link-local: []
       addresses:
         - %IP4_ADDRESS%/%IP4_NETWORK_BITS%
       routes:

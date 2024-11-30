@@ -46,7 +46,6 @@ export class SystemService extends BaseService {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "System:Etc:Netplan", req, ds);
 
-        await SystemLogic.getEtcNetplan();
-
+        await SystemLogic.getEtcNetplan(ds);
     }
 }

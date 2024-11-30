@@ -4,3 +4,4 @@ network:
   ethernets:
     %DEVICE%:
       dhcp4: true
+      link-local: []

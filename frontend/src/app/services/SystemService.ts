@@ -20,4 +20,12 @@ export class SystemService {
         });
         return ret;
     }
+    public static async setEtcNetplan(token: string): Promise<SystemProcNetDevDto[]> {
+        const ret = await FetchWrapper.get<SystemProcNetDevDto[]>({
+            url: "/api/v0/system/etc/netplan",
+            corelation: UUIDv4.generate(),
+            token: token
+        });
+        return ret;
+    }
 }

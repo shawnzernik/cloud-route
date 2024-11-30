@@ -5,7 +5,6 @@ import { SystemProcNetDevDto } from "common/src/app/models/SystemProcNetDevDto";
 import path from "path";
 import * as fs from "fs";
 import { Config } from "../../Config";
-import { AdapterService } from "../services/AdapterService";
 import { AdapterRepository } from "../data/AdapterRepository";
 import { EntitiesDataSource } from "../data/EntitiesDataSource";
 
@@ -195,13 +194,38 @@ export class SystemLogic {
     }
 
     public static async getEtcNetplan(ds: EntitiesDataSource): Promise<void> {
-        await SystemLogic.execute("sudo", ["rm", "60-*"]);
+        try {
+            await SystemLogic.execute("sudo", ["rm", "/etc/netplan/60-*.yaml"]);
+        }
+        catch {
+            // ignore all
+        }
 
         const adapters = await new AdapterRepository(ds).findBy({ enable: true });
+        for (const adapter of adapters) {
+            let template = fs.readFileSync("./templates/etc/netplan/static.yaml", { encoding: "utf8" });
+            if (adapter.dhcp)
+                template = fs.readFileSync("./templates/etc/netplan/dhcp.yaml", { encoding: "utf8" });
 
-        // for (const adapter of adapters) {
-        // }
+            template = template.replace(/%DEVICE%/g, adapter.deviceName);
 
+            if (!adapter.dhcp) {
+                template = template.replace(/%IP4_ADDRESS%/g, adapter.ip4Address!);
+                template = template.replace(/%IP4_NETWORK_BITS%/g, adapter.ip4NetworkBits!.toString());
+                template = template.replace(/%IP4_DEFAULT_GATEWAY%/g, adapter.ip4DefaultGateway!);
+                template = template.replace(/%DNS_SEARCH%/g, adapter.dnsSearch!);
+                template = template.replace(/%IP4_DNS_ADDRESSES%/g, adapter.ip4DnsAddresses!);
+            }
+
+            const tempFile = path.join(Config.tempDirectory, "60-" + adapter.deviceName + ".yaml");
+            fs.writeFileSync(tempFile, template, { encoding: "utf8" });
+
+            await SystemLogic.execute("sudo", ["chmod", "0600", tempFile]);
+            await SystemLogic.execute("sudo", ["chown", "root:root", tempFile]);
+            await SystemLogic.execute("sudo", ["mv", tempFile, "/etc/netplan/60-" + adapter.deviceName + ".yaml"]);
+        }
+
+        await SystemLogic.execute("sudo", ["netplan", "apply"]);
     }
 
     private static async execute(cmd: string, args: string[] = [], options: child_process.SpawnOptionsWithoutStdio = {

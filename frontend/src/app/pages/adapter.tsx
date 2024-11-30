@@ -31,6 +31,7 @@ class Page extends BasePage<Props, State> {
                 deviceName: "",
                 displayName: "",
                 enable: false,
+                dhcp: true,
                 guid: UUIDv4.generate(),
                 ip4NetworkBits: 24,
                 dnsSearch: "",
@@ -80,11 +81,9 @@ class Page extends BasePage<Props, State> {
 
             const token = await AuthService.getToken();
             await ExtendedAdapterService.save(token, this.state.adapter);
+            await SystemService.setEtcNetplan(token);
 
             await this.events.setLoading(false);
-
-            SystemService.setEtcNetplan(token);
-
             await Dialogue(this, "Success", "You data was saved!");
         }
         catch (err) {
@@ -122,6 +121,7 @@ class Page extends BasePage<Props, State> {
                         value={this.state.adapter.guid}
                     /></Field>
                 </Form>
+                <Heading level={2}>Device</Heading>
                 <Form>
                     <Field label="Display Name" size={2}><Input
                         value={this.state.adapter.displayName ? this.state.adapter.displayName : ""}
@@ -148,7 +148,16 @@ class Page extends BasePage<Props, State> {
                         }}
                     /></Field>
                 </Form>
+                <Heading level={2}>Addressing</Heading>
                 <Form>
+                    <Field label="DHCP" size={1}><Checkbox
+                        checked={this.state.adapter.dhcp}
+                        onChange={async (value) => {
+                            const newAdapter = this.jsonCopy(this.state.adapter);
+                            newAdapter.dhcp = value;
+                            await this.updateState({ adapter: newAdapter });
+                        }}
+                    /></Field>
                     <Field label="Address" size={2}><Input
                         value={this.state.adapter.ip4Address ? this.state.adapter.ip4Address : ""}
                         onChange={async (value) => {
@@ -174,8 +183,9 @@ class Page extends BasePage<Props, State> {
                         }}
                     /></Field>
                 </Form>
+                <Heading level={2}>Domain Name System</Heading>
                 <Form>
-                    <Field label="DNS Servers"><Input
+                    <Field label="Servers" size={3}><Input
                         value={this.state.adapter.ip4DnsAddresses ? this.state.adapter.ip4DnsAddresses : ""}
                         onChange={async (value) => {
                             const newAdapter = this.jsonCopy(this.state.adapter);
@@ -183,7 +193,7 @@ class Page extends BasePage<Props, State> {
                             await this.updateState({ adapter: newAdapter });
                         }}
                     /></Field>
-                    <Field label="Search Suffix"><Input
+                    <Field label="Suffix" size={3}><Input
                         value={this.state.adapter.dnsSearch ? this.state.adapter.dnsSearch : ""}
                         onChange={async (value) => {
                             const newAdapter = this.jsonCopy(this.state.adapter);
