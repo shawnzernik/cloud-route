@@ -10,16 +10,9 @@ jest.setTimeout(Config.jestTimeoutSeconds * 1000);
 
 describe("AdapterService", () => {
     let agent = new https.Agent({ rejectUnauthorized: false });
-    let entityGuid = "b91e9cb6-1c1f-40a1-a6e3-8944d2f20f48";
+    let entityGuid = "faf76b3d-ed66-4182-a7c2-7ea6562785fe";
     let token: string | undefined;
     let eds: EntitiesDataSource;
-
-    const adapterEntity = new AdapterEntity();
-    adapterEntity.guid = entityGuid;
-    adapterEntity.displayName = "Test Adapter";
-    adapterEntity.deviceName = "Test Device";
-    adapterEntity.enable = true;
-    adapterEntity.ip4NetworkBits = 24;
 
     beforeAll(async () => {
         eds = new EntitiesDataSource();
@@ -58,10 +51,18 @@ describe("AdapterService", () => {
         if (!token)
             throw new Error("No token - did beforeAll() fail?");
 
+        const entity = new AdapterEntity();
+        entity.guid = entityGuid;
+        entity.displayName = "Test Adapter";
+        entity.deviceName = "Test Device";
+        entity.enable = true;
+        entity.dhcp = true;
+        entity.ip4NetworkBits = 24;
+
         const response = await fetch(Config.appUrl + "/api/v0/adapter", {
             agent: agent,
             method: "POST",
-            body: JSON.stringify(adapterEntity),
+            body: JSON.stringify(entity),
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
@@ -75,8 +76,8 @@ describe("AdapterService", () => {
         expect(response.ok).toBeTruthy();
         expect(response.status).toBe(200);
 
-        const reloaded = await new AdapterRepository(eds).findOneByOrFail({ guid: entityGuid });
-        expect(adapterEntity.guid).toEqual(reloaded.guid);
+        let reloaded = await new AdapterRepository(eds).findOneByOrFail({ guid: entityGuid });
+        expect(entity.guid).toEqual(reloaded.guid);
     }, Config.jestTimeoutSeconds * 1000);
 
     test("GET /api/v0/adapters should return adapter list", async () => {
@@ -96,9 +97,6 @@ describe("AdapterService", () => {
         if (!response.ok)
             throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
 
-        if (!obj["data"])
-            throw new Error("No data returned!");
-
         const data = obj["data"] as AdapterDto[];
 
         expect(data.length > 0).toBeTruthy();
@@ -106,6 +104,8 @@ describe("AdapterService", () => {
         expect(data[0].displayName).toBeTruthy();
         expect(data[0].deviceName).toBeTruthy();
         expect(data[0].enable).toBeTruthy();
+        expect(data[0].dhcp).toBeTruthy();
+        expect(data[0].ip4NetworkBits).toBeTruthy();
     }, Config.jestTimeoutSeconds * 1000);
 
     test("GET /api/v0/adapter/:guid should return adapter and 200", async () => {
@@ -124,9 +124,6 @@ describe("AdapterService", () => {
         const obj = await response.json();
         if (!response.ok)
             throw new Error(`Response: ${response.status} - ${response.statusText} - ${obj.error}`);
-
-        if (!obj["data"])
-            throw new Error("No data returned!");
 
         const data = obj["data"] as AdapterDto;
 
@@ -153,7 +150,7 @@ describe("AdapterService", () => {
         expect(response.ok).toBeTruthy();
         expect(response.status).toBe(200);
 
-        const entity = await new AdapterRepository(eds).findBy({ guid: entityGuid });
+        let entity = await new AdapterRepository(eds).findBy({ guid: entityGuid });
         expect(entity.length).toEqual(0);
     }, Config.jestTimeoutSeconds * 1000);
 });

@@ -3,9 +3,10 @@ export interface AdapterDto {
     displayName: string;
     deviceName: string;
     enable: boolean;
-    ip4Address?: string; // Optional
+    dhcp: boolean;
+    ip4Address?: string;
     ip4NetworkBits: number;
-    ip4DefaultGateway?: string; // Optional
-    ip4DnsAddresses?: string; // Optional
-    dnsSearch?: string; // Optional
+    ip4DefaultGateway?: string;
+    ip4DnsAddresses?: string;
+    dnsSearch?: string;
 }

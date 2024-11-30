@@ -16,26 +16,30 @@ export class AdapterEntity implements AdapterDto, CopyInterface<AdapterDto> {
     @Column({ name: "enable" })
     public enable: boolean = false;
 
+    @Column({ name: "dhcp" })
+    public dhcp: boolean = false;
+
     @Column({ name: "ip4_address", nullable: true })
-    public ip4Address?: string; // Optional
+    public ip4Address?: string;
 
     @Column({ name: "ip4_network_bits" })
     public ip4NetworkBits: number = 0;
 
     @Column({ name: "ip4_default_gateway", nullable: true })
-    public ip4DefaultGateway?: string; // Optional
+    public ip4DefaultGateway?: string;
 
     @Column({ name: "ip4_dns_addresses", nullable: true })
-    public ip4DnsAddresses?: string; // Optional
+    public ip4DnsAddresses?: string;
 
     @Column({ name: "dns_search", nullable: true })
-    public dnsSearch?: string; // Optional
+    public dnsSearch?: string;
 
     public copyFrom(source: AdapterDto): void {
         this.guid = source.guid;
         this.displayName = source.displayName;
         this.deviceName = source.deviceName;
         this.enable = source.enable;
+        this.dhcp = source.dhcp;
         this.ip4Address = source.ip4Address;
         this.ip4NetworkBits = source.ip4NetworkBits;
         this.ip4DefaultGateway = source.ip4DefaultGateway;
@@ -48,6 +52,7 @@ export class AdapterEntity implements AdapterDto, CopyInterface<AdapterDto> {
         dest.displayName = this.displayName;
         dest.deviceName = this.deviceName;
         dest.enable = this.enable;
+        dest.dhcp = this.dhcp;
         dest.ip4Address = this.ip4Address;
         dest.ip4NetworkBits = this.ip4NetworkBits;
         dest.ip4DefaultGateway = this.ip4DefaultGateway;
