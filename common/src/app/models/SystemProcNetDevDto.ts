@@ -1,5 +1,5 @@
 // this matches /proc/net/dev
-export interface InterfaceStatsDto {
+export interface SystemProcNetDevDto {
     interface: string;
     timestamp: Date;
 

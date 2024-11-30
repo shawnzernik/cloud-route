@@ -5,6 +5,7 @@ CREATE TABLE "adapters" (
     "device_name" VARCHAR(250) NOT NULL UNIQUE,
 
     "enable" BOOLEAN NOT NULL,
+    "dhcp" BOOLEAN NOT NULL,
 
     "ip4_address" VARCHAR(15),
     "ip4_network_bits" INT NOT NULL,

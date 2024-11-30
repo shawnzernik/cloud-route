@@ -54,6 +54,8 @@ module.exports = {
 
         // add app pages
         system: "./src/app/pages/system.tsx",
+        adapters: "./src/app/pages/adapters.tsx",
+        adapter: "./src/app/pages/adapter.tsx",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -141,6 +143,18 @@ module.exports = {
             filename: "../static/app/pages/system.html",
             chunks: ["common", "system"],
             title: "System"
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/app/template.html",
+            filename: "../static/app/pages/adapters.html",
+            chunks: ["common", "adapters"],
+            title: "Adapter List"
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/app/template.html",
+            filename: "../static/app/pages/adapter.html",
+            chunks: ["common", "adapter"],
+            title: "Adapter Edit"
         }),
     ]
 };
