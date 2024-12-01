@@ -5,9 +5,11 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/cloud-route/backend
-ExecStart=/bin/bash -c ". /home/administrator/.nvm/nvm.sh && npm run run"
+ExecStart=/bin/bash -c ". ./start.sh"
 Restart=on-failure
 Environment=NODE_ENV=production
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

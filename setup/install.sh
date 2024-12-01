@@ -19,6 +19,31 @@ set -e # set to exit if non-zero return value
 
 set +x
 echo "========================================"
+echo "Making administrator not need password to sudo"
+echo "========================================"
+set -x
+
+echo "administrator ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/administrator
+
+set +x
+echo "========================================"
+echo "Updating ubuntu"
+echo "========================================"
+set -x
+
+sudo apt-get update
+sudo apt-get -y upgrade
+
+set +x
+echo "========================================"
+echo "sleeping 10 seconds"
+echo "========================================"
+set -x
+
+sleep 10
+
+set +x
+echo "========================================"
 echo "Installing NodeJS"
 echo "========================================"
 set -x
@@ -36,7 +61,7 @@ echo "Installing postgres, vim, and zip"
 echo "========================================"
 set -x
 
-sudo apt install -y postgresql vim unzip zip
+sudo apt-get install -y postgresql vim unzip zip
 
 set +x
 echo "========================================"
@@ -44,7 +69,7 @@ echo "Installing OpenVPN"
 echo "========================================"
 set -x
 
-sudo apt install -y openvpn easy-rsa iptables
+sudo apt-get install -y openvpn easy-rsa iptables
 sudo make-cadir /etc/openvpn/easy-rsa
 
 set +x
@@ -53,8 +78,8 @@ echo "Configuring postgresql"
 echo "========================================"
 set -x
 
-cp /home/$USER/postgresql.conf /etc/postgresql/16/main/postgresql.conf
-cp /home/$USER/pg_hba.conf /etc/postgresql/16/main/pg_hba.conf
+sudo cp /home/$USER/postgresql.conf /etc/postgresql/16/main/postgresql.conf
+sudo cp /home/$USER/pg_hba.conf /etc/postgresql/16/main/pg_hba.conf
 
 systemctl restart postgresql
 
@@ -86,10 +111,3 @@ sudo systemctl daemon-reload
 sudo systemctl enable cloud-route
 sudo systemctl start cloud-route
 sudo systemctl status cloud-route
-
-set +x
-echo "========================================"
-echo "Making administrator not need password to sudo"
-echo "========================================"
-set -x
-echo "administrator ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/administrator

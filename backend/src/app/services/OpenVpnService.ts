@@ -21,6 +21,8 @@ export class OpenVpnService extends BaseService {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "OpenVpn:Apply", req, ds);
 
-        await OpenVpnLogic.getApply(ds);
+        await OpenVpnLogic.createCertAuth(ds);
+        await OpenVpnLogic.createCert(ds, "vpn-server.lagovistatech.com");
+        await OpenVpnLogic.createCert(ds, "client.lagovistatech.com");
     }
 }

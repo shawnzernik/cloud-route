@@ -36,7 +36,7 @@ echo "Uploading"
 echo "========================================"
 set -x
 
-sshpass -p "$PASS" scp setup/* "$USER@$HOST:~/"
+scp setup/* "$USER@$HOST:~/"
 
 set +x
 echo "========================================"
@@ -44,4 +44,4 @@ echo "Running"
 echo "========================================"
 set -x
 
-sshpass -p "$PASS" ssh "$USER@$HOST" "/bin/bash -c 'echo \"$PASS\" | sudo -S ./install.sh \"$USER\"'"
+ssh $USER@$HOST "/bin/bash -c 'echo $PASS | sudo -S ./install.sh $USER'"
