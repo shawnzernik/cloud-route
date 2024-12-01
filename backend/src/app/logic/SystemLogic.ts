@@ -228,7 +228,7 @@ export class SystemLogic {
         await SystemLogic.execute("sudo", ["netplan", "apply"]);
     }
 
-    private static async execute(cmd: string, args: string[] = [], options: child_process.SpawnOptionsWithoutStdio = {
+    public static async execute(cmd: string, args: string[] = [], options: child_process.SpawnOptionsWithoutStdio = {
         cwd: undefined,
         env: process.env
     }): Promise<string> {

@@ -36,7 +36,16 @@ echo "Installing postgres, vim, and zip"
 echo "========================================"
 set -x
 
-sudo apt install postgresql vim unzip zip
+sudo apt install -y postgresql vim unzip zip
+
+set +x
+echo "========================================"
+echo "Installing OpenVPN"
+echo "========================================"
+set -x
+
+sudo apt install -y openvpn easy-rsa iptables
+sudo make-cadir /etc/openvpn/easy-rsa
 
 set +x
 echo "========================================"

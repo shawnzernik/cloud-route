@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenVPN NAT iptables
+
+[Service]
+ExecStart=/usr/local/bin/openvpn-net.sh
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

@@ -56,6 +56,7 @@ module.exports = {
         system: "./src/app/pages/system.tsx",
         adapters: "./src/app/pages/adapters.tsx",
         adapter: "./src/app/pages/adapter.tsx",
+        openvpn: "./src/app/pages/openvpn.tsx",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -155,6 +156,12 @@ module.exports = {
             filename: "../static/app/pages/adapter.html",
             chunks: ["common", "adapter"],
             title: "Adapter Edit"
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/app/template.html",
+            filename: "../static/app/pages/openvpn.html",
+            chunks: ["common", "openvpn"],
+            title: "Open VPN"
         }),
     ]
 };
