@@ -18,6 +18,7 @@ import { PayloadService } from "./tre/services/PayloadService";
 import { AdapterService } from "./app/services/AdapterService";
 import { SystemService } from "./app/services/SystemService";
 import { ExtendedAdapterService } from "./app/services/ExtendedAdapterService";
+import { OpenVpnService } from "./app/services/OpenVpnService";
 
 const app = new WebApp((logger: Logger, app: express.Express) => {
     new AuthService(logger, app);
@@ -39,6 +40,7 @@ const app = new WebApp((logger: Logger, app: express.Express) => {
     new AdapterService(logger, app);
     new ExtendedAdapterService(logger, app);
     new SystemService(logger, app);
+    new OpenVpnService(logger, app);
 
 });
 

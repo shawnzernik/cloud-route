@@ -217,6 +217,9 @@ export class SystemLogic {
                 template = template.replace(/%IP4_DNS_ADDRESSES%/g, adapter.ip4DnsAddresses!);
             }
 
+            if (!fs.existsSync(Config.tempDirectory))
+                fs.mkdirSync(Config.tempDirectory, { recursive: true });
+
             const tempFile = path.join(Config.tempDirectory, "60-" + adapter.deviceName + ".yaml");
             fs.writeFileSync(tempFile, template, { encoding: "utf8" });
 

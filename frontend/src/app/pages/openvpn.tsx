@@ -13,6 +13,7 @@ import { SettingService } from "../../tre/services/SettingService";
 import { AuthService } from "../../tre/services/AuthService";
 import { Select } from "../../tre/components/Select";
 import { SelectOption } from "../../tre/components/SelectOption";
+import { OpenVpnService } from "../services/OpenVpnService";
 
 interface Props { }
 interface State extends BasePageState {
@@ -20,6 +21,40 @@ interface State extends BasePageState {
 }
 
 class Page extends BasePage<Props, State> {
+    private static cidrSelectOptions = [<SelectOption display="/0 (h.h.h.h) (h: 4b)" value="0" />,
+    <SelectOption display="/1 (128.h.h.h) (h: 2b)" value="1" />,
+    <SelectOption display="/2 (64.h.h.h) (h: 1b)" value="2" />,
+    <SelectOption display="/3 (32.h.h.h) (h: 512m)" value="3" />,
+    <SelectOption display="/4 (16.h.h.h) (h: 256m)" value="4" />,
+    <SelectOption display="/5 (8.h.h.h) (h: 128m)" value="5" />,
+    <SelectOption display="/6 (4.h.h.h) (h: 64m)" value="6" />,
+    <SelectOption display="/7 (2.h.h.h) (h: 32m)" value="7" />,
+    <SelectOption display="/8 (1.h.h.h) (h: 16m)" value="8" />,
+    <SelectOption display="/9 (n.128.h.h) (h: 8m)" value="9" />,
+    <SelectOption display="/10 (n.64.h.h) (h: 4m)" value="10" />,
+    <SelectOption display="/11 (n.32.h.h) (h: 2m)" value="11" />,
+    <SelectOption display="/12 (n.16.h.h) (h: 1m)" value="12" />,
+    <SelectOption display="/13 (n.8.h.h) (h: 512k)" value="13" />,
+    <SelectOption display="/14 (n.4.h.h) (h: 256k)" value="14" />,
+    <SelectOption display="/15 (n.2.h.h) (h: 128k)" value="15" />,
+    <SelectOption display="/16 (n.1.h.h) (h: 64k)" value="16" />,
+    <SelectOption display="/17 (n.n.128.h) (h: 32k)" value="17" />,
+    <SelectOption display="/18 (n.n.64.h) (h: 16k)" value="18" />,
+    <SelectOption display="/19 (n.n.32.h) (h: 8k)" value="19" />,
+    <SelectOption display="/20 (n.n.16.h) (h: 4k)" value="20" />,
+    <SelectOption display="/21 (n.n.8.h) (h: 2k)" value="21" />,
+    <SelectOption display="/22 (n.n.4.h) (h: 1k)" value="22" />,
+    <SelectOption display="/23 (n.n.2.h) (h: 512)" value="23" />,
+    <SelectOption display="/24 (n.n.1.h) (h: 256)" value="24" />,
+    <SelectOption display="/25 (n.n.n.128) (h: 128)" value="25" />,
+    <SelectOption display="/26 (n.n.n.64) (h: 64)" value="26" />,
+    <SelectOption display="/27 (n.n.n.32) (h: 32)" value="27" />,
+    <SelectOption display="/28 (n.n.n.16) (h: 16)" value="28" />,
+    <SelectOption display="/29 (n.n.n.8) (h: 8)" value="29" />,
+    <SelectOption display="/30 (n.n.n.4) (h: 4)" value="30" />,
+    <SelectOption display="/31 (n.n.n.2) (h: 2)" value="31" />,
+    <SelectOption display="/32 (n.n.n.1) (h: 1)" value="32" />];
+
     public constructor(props: Props) {
         super(props);
 
@@ -71,6 +106,20 @@ class Page extends BasePage<Props, State> {
             const setting = await SettingService.getKey(token, "OpenVPN:JSON");
             setting.value = JSON.stringify(this.state.dto);
             await SettingService.save(token, setting);
+
+            await this.events.setLoading(false);
+        }
+        catch (err) {
+            await this.events.setLoading(false);
+            await ErrorMessage(this, err);
+        }
+    }
+    private async applyClicked() {
+        try {
+            await this.events.setLoading(true);
+
+            const token = await AuthService.getToken();
+            await OpenVpnService.apply(token);
 
             await this.events.setLoading(false);
         }
@@ -195,39 +244,7 @@ class Page extends BasePage<Props, State> {
                             await this.updateState({ dto: newDto });
                         }}
                     >
-                        {/* <SelectOption display="/0 (h.h.h.h) (h: 4b)" value="3" />
-                        <SelectOption display="/1 (128.h.h.h) (h: 2b)" value="3" />
-                        <SelectOption display="/2 (64.h.h.h) (h: 1b)" value="3" /> */}
-                        <SelectOption display="/3 (32.h.h.h) (h: 512m)" value="3" />
-                        <SelectOption display="/4 (16.h.h.h) (h: 256m)" value="4" />
-                        <SelectOption display="/5 (8.h.h.h) (h: 128m)" value="5" />
-                        <SelectOption display="/6 (4.h.h.h) (h: 64m)" value="6" />
-                        <SelectOption display="/7 (2.h.h.h) (h: 32m)" value="7" />
-                        <SelectOption display="/8 (1.h.h.h) (h: 16m)" value="8" />
-                        <SelectOption display="/9 (n.128.h.h) (h: 8m)" value="9" />
-                        <SelectOption display="/10 (n.64.h.h) (h: 4m)" value="10" />
-                        <SelectOption display="/11 (n.32.h.h) (h: 2m)" value="11" />
-                        <SelectOption display="/12 (n.16.h.h) (h: 1m)" value="12" />
-                        <SelectOption display="/13 (n.8.h.h) (h: 512k)" value="13" />
-                        <SelectOption display="/14 (n.4.h.h) (h: 256k)" value="14" />
-                        <SelectOption display="/15 (n.2.h.h) (h: 128k)" value="15" />
-                        <SelectOption display="/16 (n.1.h.h) (h: 64k)" value="16" />
-                        <SelectOption display="/17 (n.n.128.h) (h: 32k)" value="17" />
-                        <SelectOption display="/18 (n.n.64.h) (h: 16k)" value="18" />
-                        <SelectOption display="/19 (n.n.32.h) (h: 8k)" value="19" />
-                        <SelectOption display="/20 (n.n.16.h) (h: 4k)" value="20" />
-                        <SelectOption display="/21 (n.n.8.h) (h: 2k)" value="21" />
-                        <SelectOption display="/22 (n.n.4.h) (h: 1k)" value="22" />
-                        <SelectOption display="/23 (n.n.2.h) (h: 512)" value="23" />
-                        <SelectOption display="/24 (n.n.1.h) (h: 256)" value="24" />
-                        <SelectOption display="/25 (n.n.n.128) (h: 128)" value="25" />
-                        <SelectOption display="/26 (n.n.n.64) (h: 64)" value="26" />
-                        <SelectOption display="/27 (n.n.n.32) (h: 32)" value="27" />
-                        <SelectOption display="/28 (n.n.n.16) (h: 16)" value="28" />
-                        <SelectOption display="/29 (n.n.n.8) (h: 8)" value="29" />
-                        {/* <SelectOption display="/30 (n.n.n.4) (h: 4)" value="30" />
-                        <SelectOption display="/31 (n.n.n.2) (h: 2)" value="31" />
-                        <SelectOption display="/32 (n.n.n.1) (h: 1)" value="32" /> */}
+                        {Page.cidrSelectOptions}
                     </Select></Field>
                     <Field label="Network Type" size={1}><Select
                         value={this.state.dto.clientNetworkType}
@@ -259,39 +276,7 @@ class Page extends BasePage<Props, State> {
                             await this.updateState({ dto: newDto });
                         }}
                     >
-                        {/* <SelectOption display="/0 (h.h.h.h) (h: 4b)" value="3" />
-                        <SelectOption display="/1 (128.h.h.h) (h: 2b)" value="3" />
-                        <SelectOption display="/2 (64.h.h.h) (h: 1b)" value="3" /> */}
-                        <SelectOption display="/3 (32.h.h.h) (h: 512m)" value="3" />
-                        <SelectOption display="/4 (16.h.h.h) (h: 256m)" value="4" />
-                        <SelectOption display="/5 (8.h.h.h) (h: 128m)" value="5" />
-                        <SelectOption display="/6 (4.h.h.h) (h: 64m)" value="6" />
-                        <SelectOption display="/7 (2.h.h.h) (h: 32m)" value="7" />
-                        <SelectOption display="/8 (1.h.h.h) (h: 16m)" value="8" />
-                        <SelectOption display="/9 (n.128.h.h) (h: 8m)" value="9" />
-                        <SelectOption display="/10 (n.64.h.h) (h: 4m)" value="10" />
-                        <SelectOption display="/11 (n.32.h.h) (h: 2m)" value="11" />
-                        <SelectOption display="/12 (n.16.h.h) (h: 1m)" value="12" />
-                        <SelectOption display="/13 (n.8.h.h) (h: 512k)" value="13" />
-                        <SelectOption display="/14 (n.4.h.h) (h: 256k)" value="14" />
-                        <SelectOption display="/15 (n.2.h.h) (h: 128k)" value="15" />
-                        <SelectOption display="/16 (n.1.h.h) (h: 64k)" value="16" />
-                        <SelectOption display="/17 (n.n.128.h) (h: 32k)" value="17" />
-                        <SelectOption display="/18 (n.n.64.h) (h: 16k)" value="18" />
-                        <SelectOption display="/19 (n.n.32.h) (h: 8k)" value="19" />
-                        <SelectOption display="/20 (n.n.16.h) (h: 4k)" value="20" />
-                        <SelectOption display="/21 (n.n.8.h) (h: 2k)" value="21" />
-                        <SelectOption display="/22 (n.n.4.h) (h: 1k)" value="22" />
-                        <SelectOption display="/23 (n.n.2.h) (h: 512)" value="23" />
-                        <SelectOption display="/24 (n.n.1.h) (h: 256)" value="24" />
-                        <SelectOption display="/25 (n.n.n.128) (h: 128)" value="25" />
-                        <SelectOption display="/26 (n.n.n.64) (h: 64)" value="26" />
-                        <SelectOption display="/27 (n.n.n.32) (h: 32)" value="27" />
-                        <SelectOption display="/28 (n.n.n.16) (h: 16)" value="28" />
-                        <SelectOption display="/29 (n.n.n.8) (h: 8)" value="29" />
-                        {/* <SelectOption display="/30 (n.n.n.4) (h: 4)" value="30" />
-                        <SelectOption display="/31 (n.n.n.2) (h: 2)" value="31" />
-                        <SelectOption display="/32 (n.n.n.1) (h: 1)" value="32" /> */}
+                        {Page.cidrSelectOptions}
                     </Select></Field>
                     <Field label="DNS" size={1}><Input
                         value={this.state.dto.exposedDns}
@@ -304,6 +289,7 @@ class Page extends BasePage<Props, State> {
                 </Form>
                 <FlexRow>
                     <Button label="Save" onClick={this.saveClicked.bind(this)} />
+                    <Button label="Apply" onClick={this.applyClicked.bind(this)} />
                 </FlexRow>
             </Navigation>
         );

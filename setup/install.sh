@@ -63,7 +63,7 @@ set -x
 
 sudo apt-get install -y postgresql vim unzip zip
 # the following is for development
-audo apt-get install -y git
+sudo apt-get install -y git
 
 set +x
 echo "========================================"

@@ -10,6 +10,9 @@ export HOST="$1"
 export USER="$2"
 export PASS="$3"
 
+# this is for development - clear out old SSH connections
+rm $HOME/.ssh/known_hosts
+
 set +x
 echo "========================================"
 echo "Cleaning"

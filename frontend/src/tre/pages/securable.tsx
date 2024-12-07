@@ -82,7 +82,7 @@ class Page extends BasePage<Props, State> {
                 topMenuGuid="b1e3c680-0f62-4931-8a68-4be9b4b070f7"
                 leftMenuGuid="46c065f9-16cc-4b8b-9f22-421177576460"
             >
-                <Heading level={1}>Menu Edit</Heading>
+                <Heading level={1}>Securable Edit</Heading>
                 <Form>
                     <Field label="GUID" size={3}><Input
                         readonly={true}

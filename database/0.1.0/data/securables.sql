@@ -1,4 +1,6 @@
 INSERT INTO "securables" ("guid", "display_name") VALUES
+('ec1942c4-6ffc-4e16-a17f-7e560fc6b98f', 'OpenVpn:Apply'),
+
 ('4e3d6d80-5ad3-4e84-9360-3ee92d7b5a28', 'System:Top'),
 ('ba197e91-f684-4649-889d-dc1073a423f7', 'System:Proc:Net:Dev'),
 ('369e2cb6-8bad-42b8-884d-57513c0c7e5b', 'System:Etc:Netplan'),

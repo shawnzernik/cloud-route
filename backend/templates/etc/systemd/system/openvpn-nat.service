@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenVPN NAT Using IP Tables
+
+[Service]
+ExecStart=/usr/local/bin/openvpn-nat.sh
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
