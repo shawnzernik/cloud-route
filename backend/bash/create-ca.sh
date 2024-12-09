@@ -42,3 +42,7 @@ fi
 if ls /etc/openvpn/easy-rsa/pki/private/*.key 1> /dev/null 2>&1; then
     cp -v /etc/openvpn/easy-rsa/pki/private/*.key /etc/openvpn/
 fi
+
+cd /etc/openvpn
+
+openvpn --genkey secret ta.key

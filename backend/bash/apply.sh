@@ -5,6 +5,9 @@ set -e
 
 env
 
+cat ./templates/etc/sysctl >> sysctl.conf
+sysctl -p /etc/sysctl.conf
+
 mv ../temp/openvpn-nat.sh /usr/local/bin/openvpn-nat.sh
 chmod +x /usr/local/bin/openvpn-nat.sh
 
@@ -18,5 +21,10 @@ set +e
 systemctl enable openvpn-nat
 systemctl stop openvpn-nat
 set -e
-
 systemctl start openvpn-nat
+
+set +e
+systemctl enable openvpn@server
+systemctl stop openvpn@server
+set -e
+systemctl start openvpn@server
