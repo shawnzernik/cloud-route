@@ -32,7 +32,7 @@ export class SystemService extends BaseService {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "System:Top", req, ds);
 
-        const ret = await SystemLogic.getTop();
+        const ret = await SystemLogic.getTop(logger);
         return ret;
     }
     public async getProcNetDev(logger: Logger, req: express.Request, ds: EntitiesDataSource): Promise<SystemProcNetDevDto[]> {
@@ -46,6 +46,6 @@ export class SystemService extends BaseService {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "System:Etc:Netplan", req, ds);
 
-        await SystemLogic.getEtcNetplan(ds);
+        await SystemLogic.getEtcNetplan(logger, ds);
     }
 }

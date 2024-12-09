@@ -7,9 +7,10 @@ import * as fs from "fs";
 import { Config } from "../../Config";
 import { AdapterRepository } from "../data/AdapterRepository";
 import { EntitiesDataSource } from "../data/EntitiesDataSource";
+import { Logger } from "../../tre/Logger";
 
 export class SystemLogic {
-    public static async getTop() {
+    public static async getTop(logger: Logger) {
         const ret: SystemTopDto = {
             cpuHwInt: NaN, cpuIdle: NaN, cpuNiced: NaN, cpuStolen: NaN, cpuSwInt: NaN, cpuSystem: NaN, cpuUser: NaN, cpuWaitIo: NaN,
             load15min: NaN, load1min: NaN, load5min: NaN,
@@ -24,7 +25,7 @@ export class SystemLogic {
 
         // const out = await SystemLogic.execute("sudo", ["top", "-n", "1", "-b", "-w", "512", "-e", "k", "-E", "k"]);
         // // const out = await SystemLogic.execute("top", ["-n", "1", "-b", "-w", "512", "-e", "k", "-E", "k"]);
-        const out = await SystemLogic.execute("sudo", ["top", "-n", "1", "-b", "-w", "512", "-e", "k", "-E", "k", "-c"]);
+        const out = await SystemLogic.execute(logger, "sudo", ["top", "-n", "1", "-b", "-w", "512", "-e", "k", "-E", "k", "-c"]);
         // const out = await SystemLogic.execute("top", ["-n", "1", "-b", "-w", "512", "-e", "k", "-E", "k", "-c"]);
         if (!fs.existsSync(Config.tempDirectory))
             fs.mkdirSync(Config.tempDirectory, { recursive: true });
@@ -193,9 +194,9 @@ export class SystemLogic {
         });
     }
 
-    public static async getEtcNetplan(ds: EntitiesDataSource): Promise<void> {
+    public static async getEtcNetplan(logger: Logger, ds: EntitiesDataSource): Promise<void> {
         try {
-            await SystemLogic.execute("sudo", ["rm", "/etc/netplan/60-*.yaml"]);
+            await SystemLogic.execute(logger, "sudo", ["rm", "/etc/netplan/60-*.yaml"]);
         }
         catch {
             // ignore all
@@ -223,18 +224,24 @@ export class SystemLogic {
             const tempFile = path.join(Config.tempDirectory, "60-" + adapter.deviceName + ".yaml");
             fs.writeFileSync(tempFile, template, { encoding: "utf8" });
 
-            await SystemLogic.execute("sudo", ["chmod", "0600", tempFile]);
-            await SystemLogic.execute("sudo", ["chown", "root:root", tempFile]);
-            await SystemLogic.execute("sudo", ["mv", tempFile, "/etc/netplan/60-" + adapter.deviceName + ".yaml"]);
+            await SystemLogic.execute(logger, "sudo", ["chmod", "0600", tempFile]);
+            await SystemLogic.execute(logger, "sudo", ["chown", "root:root", tempFile]);
+            await SystemLogic.execute(logger, "sudo", ["mv", tempFile, "/etc/netplan/60-" + adapter.deviceName + ".yaml"]);
         }
 
-        await SystemLogic.execute("sudo", ["netplan", "apply"]);
+        await SystemLogic.execute(logger, "sudo", ["netplan", "apply"]);
     }
 
-    public static async execute(cmd: string, args: string[] = [], options: child_process.SpawnOptionsWithoutStdio = {
+    public static async execute(logger: Logger, cmd: string, args: string[] = [], options: child_process.SpawnOptionsWithoutStdio = {
         cwd: undefined,
         env: process.env
     }): Promise<string> {
+        let actualCmd = cmd;
+        for (const arg of args)
+            actualCmd += " " + arg;
+
+        await logger.log(">>>>>>>>\n" + actualCmd);
+
         let out = "";
         return new Promise((resolve, reject) => {
             const ps = child_process.spawn(cmd, args, options);
@@ -246,7 +253,8 @@ export class SystemLogic {
                 out += chunk;
             });
 
-            ps.on("close", (code) => {
+            ps.on("close", async (code) => {
+                await logger.log("<<<<<<<<\n" + out);
                 if (code != 0)
                     reject(new Error(out));
                 else

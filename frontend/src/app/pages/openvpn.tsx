@@ -14,10 +14,14 @@ import { AuthService } from "../../tre/services/AuthService";
 import { Select } from "../../tre/components/Select";
 import { SelectOption } from "../../tre/components/SelectOption";
 import { OpenVpnService } from "../services/OpenVpnService";
+import { Table } from "../../tre/components/Table";
+import * as path from "path";
 
 interface Props { }
 interface State extends BasePageState {
     dto: OpenVpnDto;
+    certs: any[];
+    clientCn: string;
 }
 
 class Page extends BasePage<Props, State> {
@@ -77,10 +81,29 @@ class Page extends BasePage<Props, State> {
                 serverCnHostName: "openvpn.lagovistatech.com",
                 serverPort: 1194,
                 serverProtocol: "udp"
-            }
+            },
+            certs: [],
+            clientCn: ""
         };
     }
 
+    private async loadCerts(token: string): Promise<void> {
+        const ret = [];
+
+        const certs = await OpenVpnService.listCerts(token);
+        for (const cert of certs) {
+            ret.push({
+                "fullname": cert.path + "/" + cert.name,
+                "File Name": cert.name,
+                "Bytes": cert.size,
+                "Modified": cert.modified
+            });
+        }
+
+        await this.updateState({
+            certs: ret
+        });
+    }
     public async componentDidMount(): Promise<void> {
         try {
             await this.events.setLoading(true);
@@ -88,7 +111,9 @@ class Page extends BasePage<Props, State> {
             const token = await AuthService.getToken();
             const setting = await SettingService.getKey(token, "OpenVPN:JSON");
             const dto = JSON.parse(setting.value) as unknown as OpenVpnDto;
-            this.updateState({ dto: dto });
+            await this.updateState({ dto: dto });
+
+            await this.loadCerts(token);
 
             await this.events.setLoading(false);
         }
@@ -120,6 +145,39 @@ class Page extends BasePage<Props, State> {
 
             const token = await AuthService.getToken();
             await OpenVpnService.apply(token);
+
+            await this.events.setLoading(false);
+        }
+        catch (err) {
+            await this.events.setLoading(false);
+            await ErrorMessage(this, err);
+        }
+    }
+
+    private async createCaClicked() {
+        try {
+            await this.events.setLoading(true);
+
+            const token = await AuthService.getToken();
+            await OpenVpnService.createCa(token);
+
+            await this.loadCerts(token);
+
+            await this.events.setLoading(false);
+        }
+        catch (err) {
+            await this.events.setLoading(false);
+            await ErrorMessage(this, err);
+        }
+    }
+    private async createClientClicked() {
+        try {
+            await this.events.setLoading(true);
+
+            const token = await AuthService.getToken();
+            await OpenVpnService.createClient(token, this.state.clientCn);
+
+            await this.loadCerts(token);
 
             await this.events.setLoading(false);
         }
@@ -290,6 +348,26 @@ class Page extends BasePage<Props, State> {
                 <FlexRow>
                     <Button label="Save" onClick={this.saveClicked.bind(this)} />
                     <Button label="Apply" onClick={this.applyClicked.bind(this)} />
+                </FlexRow>
+                <Heading level={2}>Certificates</Heading>
+                <Table
+                    items={this.state.certs}
+                    primaryKey="fullname"
+                ></Table>
+                <FlexRow>
+                    <Button label="Create CA" onClick={this.createCaClicked.bind(this)} />
+                </FlexRow>
+                <Heading level={2}>New Client</Heading>
+                <Form>
+                    <Field label="FQ Host Name"><Input
+                        value={this.state.clientCn}
+                        onChange={async (value) => {
+                            await this.updateState({ clientCn: value });
+                        }}
+                    /></Field>
+                </Form>
+                <FlexRow>
+                    <Button label="Create Client" onClick={this.createClientClicked.bind(this)} />
                 </FlexRow>
             </Navigation>
         );
