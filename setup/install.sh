@@ -72,7 +72,10 @@ echo "========================================"
 set -x
 
 sudo apt-get install -y openvpn easy-rsa iptables
-sudo make-cadir /etc/openvpn/easy-rsa
+
+if [ ! -d "/etc/openvpn/easy-rsa" ]; then
+    sudo make-cadir /etc/openvpn/easy-rsa
+fi
 
 set +x
 echo "========================================"
@@ -111,5 +114,5 @@ cd /home/$USER
 cp /home/$USER/cloud-route.service /etc/systemd/system/cloud-route.service
 sudo systemctl daemon-reload
 sudo systemctl enable cloud-route
-sudo systemctl start cloud-route
+sudo systemctl restart cloud-route
 sudo systemctl status cloud-route

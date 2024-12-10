@@ -2,7 +2,7 @@
 
 if [ -z "$1" -o -z "$2" -o -z "$3" ]; then
     echo "Use the following syntax:"
-    echo "package.sh host user pass"
+    echo "package.sh [host] [user] [pass|pem]"
     exit 1
 fi
 
@@ -39,7 +39,11 @@ echo "Uploading"
 echo "========================================"
 set -x
 
-scp setup/* "$USER@$HOST:~/"
+if [ -e "$PASS" ]; then
+    scp -i $PASS setup/* "$USER@$HOST:~/"
+else
+    scp setup/* "$USER@$HOST:~/"
+fi
 
 set +x
 echo "========================================"
@@ -47,4 +51,8 @@ echo "Running"
 echo "========================================"
 set -x
 
-ssh $USER@$HOST "/bin/bash -c 'echo $PASS | sudo -S ./install.sh $USER'"
+if [ -e "$PASS" ]; then
+    ssh $USER@$HOST -i $3 "/bin/bash -c 'sudo -S ./install.sh $USER'"
+else
+    ssh $USER@$HOST "/bin/bash -c 'echo $PASS | sudo -S ./install.sh $USER'"
+fi
