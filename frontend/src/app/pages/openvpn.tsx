@@ -20,8 +20,6 @@ import * as path from "path";
 interface Props { }
 interface State extends BasePageState {
     dto: OpenVpnDto;
-    certs: any[];
-    clientCn: string;
 }
 
 class Page extends BasePage<Props, State> {
@@ -75,35 +73,16 @@ class Page extends BasePage<Props, State> {
                 clientNetwork: "10.0.1.0",
                 clientNetworkBits: 24,
                 clientNetworkType: "nat",
-                exposedNetwork: "10.0.4.0",
-                exposedNetworkBits: 22,
-                exposedDns: "8.8.8.8",
+                exposedNetwork: "10.0.0.0",
+                exposedNetworkBits: 24,
+                exposedDns: "10.0.0.2",
                 serverCnHostName: "openvpn.lagovistatech.com",
                 serverPort: 1194,
                 serverProtocol: "udp"
             },
-            certs: [],
-            clientCn: ""
         };
     }
 
-    private async loadCerts(token: string): Promise<void> {
-        const ret = [];
-
-        const certs = await OpenVpnService.listCerts(token);
-        for (const cert of certs) {
-            ret.push({
-                "fullname": cert.path + "/" + cert.name,
-                "File Name": cert.name,
-                "Bytes": cert.size,
-                "Modified": cert.modified
-            });
-        }
-
-        await this.updateState({
-            certs: ret
-        });
-    }
     public async componentDidMount(): Promise<void> {
         try {
             await this.events.setLoading(true);
@@ -112,8 +91,6 @@ class Page extends BasePage<Props, State> {
             const setting = await SettingService.getKey(token, "OpenVPN:JSON");
             const dto = JSON.parse(setting.value) as unknown as OpenVpnDto;
             await this.updateState({ dto: dto });
-
-            await this.loadCerts(token);
 
             await this.events.setLoading(false);
         }
@@ -154,45 +131,12 @@ class Page extends BasePage<Props, State> {
         }
     }
 
-    private async createCaClicked() {
-        try {
-            await this.events.setLoading(true);
-
-            const token = await AuthService.getToken();
-            await OpenVpnService.createCa(token);
-
-            await this.loadCerts(token);
-
-            await this.events.setLoading(false);
-        }
-        catch (err) {
-            await this.events.setLoading(false);
-            await ErrorMessage(this, err);
-        }
-    }
-    private async createClientClicked() {
-        try {
-            await this.events.setLoading(true);
-
-            const token = await AuthService.getToken();
-            await OpenVpnService.createClient(token, this.state.clientCn);
-
-            await this.loadCerts(token);
-
-            await this.events.setLoading(false);
-        }
-        catch (err) {
-            await this.events.setLoading(false);
-            await ErrorMessage(this, err);
-        }
-    }
-
     public render(): React.ReactNode {
         return (
             <Navigation
                 state={this.state} events={this.events}
                 topMenuGuid="ce40996d-0a86-493c-b0f4-06bb45e312c8"
-                leftMenuGuid="44596222-4db4-4f3f-aef5-35e118a29d87"
+                leftMenuGuid="15489f89-07e7-487a-b4b6-b888289d1e85"
             >
                 <Heading level={1}>Open VPN</Heading>
                 <Heading level={2}>Certificate Authority</Heading>
@@ -348,26 +292,6 @@ class Page extends BasePage<Props, State> {
                 <FlexRow>
                     <Button label="Save" onClick={this.saveClicked.bind(this)} />
                     <Button label="Apply" onClick={this.applyClicked.bind(this)} />
-                </FlexRow>
-                <Heading level={2}>Certificates</Heading>
-                <Table
-                    items={this.state.certs}
-                    primaryKey="fullname"
-                ></Table>
-                <FlexRow>
-                    <Button label="Create CA" onClick={this.createCaClicked.bind(this)} />
-                </FlexRow>
-                <Heading level={2}>New Client</Heading>
-                <Form>
-                    <Field label="FQ Host Name"><Input
-                        value={this.state.clientCn}
-                        onChange={async (value) => {
-                            await this.updateState({ clientCn: value });
-                        }}
-                    /></Field>
-                </Form>
-                <FlexRow>
-                    <Button label="Create Client" onClick={this.createClientClicked.bind(this)} />
                 </FlexRow>
             </Navigation>
         );
