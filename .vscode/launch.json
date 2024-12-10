@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "backend website",
-            "runtimeExecutable": "/home/administrator/.nvm/versions/node/v20.18.1/bin/npx",
+            "runtimeExecutable": "/home/ubuntu/.nvm/versions/node/v20.18.1/bin/npx",
             "runtimeArgs": [
                 "nodemon",
                 "--inspect",

@@ -13,7 +13,13 @@ export class IPv4 {
                 ret += "255.";
                 remaining += -8;
             } else {
-                ret += Math.pow(2, remaining).toString() + ".";
+                let bits = "";
+                for (let bitCnt = 0; bitCnt < 8; bitCnt++)
+                    if (bitCnt < remaining)
+                        bits += "1";
+                    else
+                        bits += "0";
+                ret += Number.parseInt(bits, 2);
                 remaining = 0;
             }
         }
