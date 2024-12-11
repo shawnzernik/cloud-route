@@ -1,5 +1,6 @@
 INSERT INTO "securables" ("guid", "display_name") VALUES
 ('ec1942c4-6ffc-4e16-a17f-7e560fc6b98f', 'OpenVpn:Apply'),
+('a0890ce5-70cb-4193-a17f-a1ed52b8d74f', 'OpenVpn:Download'),
 ('c4618970-5376-43d7-b38a-5603f55c221e', 'OpenVpn:Cert:List'),
 ('0e362ade-cbe7-49e6-95d9-c77222b85b02', 'OpenVpn:Create:CA'),
 ('b79f3c92-afe1-4253-b465-3f01f28dfd16', 'OpenVpn:Create:Client'),

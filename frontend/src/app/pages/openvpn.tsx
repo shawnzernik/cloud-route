@@ -70,9 +70,9 @@ class Page extends BasePage<Props, State> {
                 caOrgUnit: "Informatoin Technology",
                 caEmail: "noemail@lagovistatech.com",
                 caCnHostName: "ca.lagovistatech.com",
+                publicIp: "1.1.1.1",
                 clientNetwork: "10.0.1.0",
                 clientNetworkBits: 24,
-                clientNetworkType: "nat",
                 exposedNetwork: "10.0.0.0",
                 exposedNetworkBits: 24,
                 exposedDns: "10.0.0.2",
@@ -200,6 +200,14 @@ class Page extends BasePage<Props, State> {
                 </Form>
                 <Heading level={2}>VPN Server</Heading>
                 <Form>
+                    <Field label="Public IP" size={1}><Input
+                        value={this.state.dto.publicIp}
+                        onChange={async (value) => {
+                            const newDto = this.jsonCopy(this.state.dto);
+                            newDto.publicIp = value;
+                            await this.updateState({ dto: newDto });
+                        }}
+                    /></Field>
                     <Field label="CN/Host Name" size={3}><Input
                         value={this.state.dto.serverCnHostName}
                         onChange={async (value) => {
@@ -247,17 +255,6 @@ class Page extends BasePage<Props, State> {
                         }}
                     >
                         {Page.cidrSelectOptions}
-                    </Select></Field>
-                    <Field label="Network Type" size={1}><Select
-                        value={this.state.dto.clientNetworkType}
-                        onChange={async (value) => {
-                            const newDto = this.jsonCopy(this.state.dto);
-                            newDto.caCountry = value;
-                            await this.updateState({ dto: newDto });
-                        }}
-                    >
-                        <SelectOption display="NAT" value="nat" />
-                        <SelectOption display="Bridge" value="bridge" />
                     </Select></Field>
                 </Form>
                 <Heading level={2}>Exposed Network</Heading>

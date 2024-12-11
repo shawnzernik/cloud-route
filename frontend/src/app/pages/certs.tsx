@@ -13,11 +13,16 @@ import { SettingService } from "../../tre/services/SettingService";
 import { AuthService } from "../../tre/services/AuthService";
 import { OpenVpnService } from "../services/OpenVpnService";
 import { Table } from "../../tre/components/Table";
+import { SelectOption } from "../../tre/components/SelectOption";
+import { Select } from "../../tre/components/Select";
+import { FileDto } from "common/src/app/models/FileDto";
 
 interface Props { }
 interface State extends BasePageState {
     dto: OpenVpnDto;
     certs: any[];
+    clientOptions: any[];
+    selectedClient: string;
     clientCn: string;
 }
 
@@ -35,9 +40,9 @@ class Page extends BasePage<Props, State> {
                 caOrgUnit: "Informatoin Technology",
                 caEmail: "noemail@lagovistatech.com",
                 caCnHostName: "ca.lagovistatech.com",
+                publicIp: "1.1.1.1",
                 clientNetwork: "10.0.1.0",
                 clientNetworkBits: 24,
-                clientNetworkType: "nat",
                 exposedNetwork: "10.0.0.0",
                 exposedNetworkBits: 24,
                 exposedDns: "10.0.0.2",
@@ -46,25 +51,32 @@ class Page extends BasePage<Props, State> {
                 serverProtocol: "udp"
             },
             certs: [],
+            clientOptions: [],
+            selectedClient: "",
             clientCn: ""
         };
     }
 
-    private async loadCerts(token: string): Promise<void> {
-        const ret = [];
+    private async loadCerts(token: string, openVpnDto: OpenVpnDto): Promise<void> {
+        const clientOptions = [];
+        clientOptions.push(<SelectOption display="" value="" />);
+
+        const certFiles = [];
 
         const certs = await OpenVpnService.listCerts(token);
         for (const cert of certs) {
-            ret.push({
-                "fullname": cert.path + "/" + cert.name,
+            certFiles.push({
                 "File Name": cert.name,
                 "Bytes": cert.size,
                 "Modified": cert.modified
             });
+            if (cert.name != "ca.crt" && cert.name != openVpnDto.serverCnHostName + ".crt" && cert.name.endsWith(".crt"))
+                clientOptions.push(<SelectOption display={cert.name} value={cert.name} />);
         }
 
         await this.updateState({
-            certs: ret
+            certs: certFiles,
+            clientOptions: clientOptions
         });
     }
     public async componentDidMount(): Promise<void> {
@@ -76,7 +88,7 @@ class Page extends BasePage<Props, State> {
             const dto = JSON.parse(setting.value) as unknown as OpenVpnDto;
             await this.updateState({ dto: dto });
 
-            await this.loadCerts(token);
+            await this.loadCerts(token, dto);
 
             await this.events.setLoading(false);
         }
@@ -93,7 +105,7 @@ class Page extends BasePage<Props, State> {
             const token = await AuthService.getToken();
             await OpenVpnService.createCa(token);
 
-            await this.loadCerts(token);
+            await this.loadCerts(token, this.state.dto);
 
             await this.events.setLoading(false);
         }
@@ -109,7 +121,29 @@ class Page extends BasePage<Props, State> {
             const token = await AuthService.getToken();
             await OpenVpnService.createClient(token, this.state.clientCn);
 
-            await this.loadCerts(token);
+            await this.loadCerts(token, this.state.dto);
+
+            await this.events.setLoading(false);
+        }
+        catch (err) {
+            await this.events.setLoading(false);
+            await ErrorMessage(this, err);
+        }
+    }
+    private async downloadClientClicked() {
+        try {
+            await this.events.setLoading(true);
+
+            const token = await AuthService.getToken();
+            const file: FileDto = await OpenVpnService.downloadClient(token, this.state.selectedClient);
+            if (!file.name.toLowerCase().endsWith(".zip"))
+                throw new Error(`The file '${file.name}' is not a '.zip' file!`);
+
+            const link = document.createElement("a");
+            link.download = file.name;
+            link.href = `data:application/zip;base64,${file.base64}`; document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
             await this.events.setLoading(false);
         }
@@ -128,11 +162,27 @@ class Page extends BasePage<Props, State> {
             >
                 <Heading level={1}>Certificates</Heading>
                 <Table
+                    primaryKey=""
                     items={this.state.certs}
-                    primaryKey="fullname"
                 ></Table>
                 <FlexRow>
                     <Button label="Create CA" onClick={this.createCaClicked.bind(this)} />
+                </FlexRow>
+                <Heading level={2}>Client Configuration</Heading>
+                <Form>
+                    <Field label="Certificate">
+                        <Select
+                            value={this.state.selectedClient}
+                            onChange={(value) => {
+                                this.updateState({ selectedClient: value });
+                            }}
+                        >
+                            {this.state.clientOptions}
+                        </Select>
+                    </Field>
+                </Form>
+                <FlexRow>
+                    <Button label="Download" onClick={this.downloadClientClicked.bind(this)} />
                 </FlexRow>
                 <Heading level={2}>New Client</Heading>
                 <Form>

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { mkdirSync } from "fs";
 import path from "path";
 import { OpenVpnDto } from "common/src/app/models/OpenVpnDto";
 import { IPv4 } from "common/src/app/logic/IPv4";
@@ -8,8 +8,44 @@ import { Config } from "../../Config";
 import { Logger } from "../../tre/Logger";
 import { EntitiesDataSource } from "../data/EntitiesDataSource";
 import { FileDto } from "common/src/app/models/FileDto"
+import { UUIDv4 } from "common/src/tre/logic/UUIDv4";
 
 export class OpenVpnLogic {
+    public static async download(logger: Logger, ds: EntitiesDataSource, name: string): Promise<FileDto> {
+        if (name.includes("/"))
+            throw new Error("The name cannot contain forward slashes!");
+
+        const setting = await new SettingRepository(ds).findByKey("OpenVPN:JSON");
+        const config = JSON.parse(setting.value) as OpenVpnDto;
+
+        const dir = path.join(Config.tempDirectory, UUIDv4.generate());
+        mkdirSync(dir, { recursive: true });
+
+        let clientOvpn = fs.readFileSync("./templates/client.ovpn", { encoding: "utf8" });
+        clientOvpn = clientOvpn.replace(/%PUBLIC_IP%/g, config.publicIp);
+        clientOvpn = clientOvpn.replace(/%SERVER_PORT%/g, config.serverPort.toString());
+        clientOvpn = clientOvpn.replace(/%SERVER_PROTOCOL%/g, config.serverProtocol);
+        fs.writeFileSync(path.join(dir, "client.ovpn"), clientOvpn, { encoding: "utf8" });
+
+        let keyName = name.replace(/\.crt/g, ".key");
+        await SystemLogic.execute(logger, "sudo", ["bash", "./bash/download.sh", dir, name, keyName]);
+
+        const zipFile = dir + ".zip";
+        const buffer = fs.readFileSync(zipFile);
+        const base64 = buffer.toString("base64");
+
+        const file: FileDto = {
+            path: "",
+            name: path.basename(dir + ".zip"),
+            modified: new Date(),
+            size: base64.length,
+            base64: base64
+        };
+
+        fs.rmSync(dir, { force: true, recursive: true });
+
+        return file;
+    }
     public static listCerts(): FileDto[] {
         const ret: FileDto[] = [];
 
@@ -63,7 +99,6 @@ export class OpenVpnLogic {
         this.applySetVar(/%CLIENT_NETWORK%/g, config.clientNetwork);
         this.applySetVar(/%CLIENT_NETWORK_BITS%/g, config.clientNetworkBits.toString());
         this.applySetVar(/%CLIENT_SUBNET_MASK%/g, IPv4.calculateSubnetMask(config.clientNetworkBits));
-        this.applySetVar(/%CLIENT_NETWORK_TYPE%/g, config.clientNetworkType);
 
         this.applySetVar(/%EXPOSED_NETWORK%/g, config.exposedNetwork);
         this.applySetVar(/%EXPOSED_NETWORK_BITS%/g, config.exposedNetworkBits.toString());
@@ -110,9 +145,9 @@ export class OpenVpnLogic {
         };
 
         await SystemLogic.execute(logger, "sudo", ["bash", "./bash/create-ca.sh"]);
-        await this.createClient(logger, ds, openVpnDto.serverCnHostName);
+        await this.createCert(logger, ds, openVpnDto.serverCnHostName, "server");
     }
-    public static async createClient(logger: Logger, ds: EntitiesDataSource, cn: string) {
+    public static async createCert(logger: Logger, ds: EntitiesDataSource, cn: string, type: "client" | "server") {
         const setting = await new SettingRepository(ds).findByKey("OpenVPN:JSON");
         const openVpnDto = JSON.parse(setting.value) as OpenVpnDto;
 
@@ -126,6 +161,6 @@ export class OpenVpnLogic {
             EASYRSA_REQ_CN: cn
         };
 
-        await SystemLogic.execute(logger, "sudo", ["bash", "./bash/create-cert.sh", cn]);
+        await SystemLogic.execute(logger, "sudo", ["bash", "./bash/create-cert.sh", cn, type]);
     }
 }

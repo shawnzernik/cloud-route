@@ -3,6 +3,14 @@ import { FetchWrapper } from "../../tre/services/FetchWrapper";
 import { FileDto } from "common/src/app/models/FileDto";
 
 export class OpenVpnService {
+    static async downloadClient(token: string, client: string): Promise<FileDto> {
+        const file = await FetchWrapper.get<FileDto>({
+            url: "/api/v0/openvpn/download/" + client,
+            corelation: UUIDv4.generate(),
+            token: token
+        });
+        return file;
+    }
     static async createClient(token: string, clientCn: string) {
         await FetchWrapper.post<void>({
             url: "/api/v0/openvpn/create/client",

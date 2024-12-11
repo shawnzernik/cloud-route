@@ -17,6 +17,7 @@ export class OpenVpnService extends BaseService {
 
         app.get("/api/v0/openvpn/apply", (req, resp) => { this.responseDtoWrapper(req, resp, this.apply) });
         app.get("/api/v0/openvpn/certs", (req, resp) => { this.responseDtoWrapper(req, resp, this.listCerts) });
+        app.get("/api/v0/openvpn/download/:name", (req, resp) => { this.responseDtoWrapper(req, resp, this.doanload) });
         app.get("/api/v0/openvpn/create/ca", (req, resp) => { this.responseDtoWrapper(req, resp, this.createCa) });
         app.post("/api/v0/openvpn/create/client", (req, resp) => { this.responseDtoWrapper(req, resp, this.createClient) });
     }
@@ -39,9 +40,16 @@ export class OpenVpnService extends BaseService {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "OpenVpn:Create:Client", req, ds);
 
-        await OpenVpnLogic.createClient(logger, ds, req.body.cn);
+        await OpenVpnLogic.createCert(logger, ds, req.body.cn, "client");
     }
+    public async doanload(logger: Logger, req: express.Request, ds: EntitiesDataSource): Promise<FileDto> {
+        await logger.trace();
+        await BaseService.checkSecurityName(logger, "OpenVpn:Download", req, ds);
 
+        const name = req.params["name"];
+        const file: FileDto = await OpenVpnLogic.download(logger, ds, name);
+        return file;
+    }
     public async apply(logger: Logger, req: express.Request, ds: EntitiesDataSource): Promise<void> {
         await logger.trace();
         await BaseService.checkSecurityName(logger, "OpenVpn:Apply", req, ds);

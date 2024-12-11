@@ -7,13 +7,14 @@ export interface OpenVpnDto {
     caEmail: string;
     caCnHostName: string;
 
+    publicIp: string;
+
     serverCnHostName: string;
     serverPort: number;
     serverProtocol: string;
 
     clientNetwork: string;
     clientNetworkBits: number;
-    clientNetworkType: string;
 
     exposedNetwork: string;
     exposedNetworkBits: number;

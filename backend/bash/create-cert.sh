@@ -11,7 +11,7 @@ env
 cd /etc/openvpn/easy-rsa
 
 ./easyrsa gen-req $1 nopass
-./easyrsa sign-req server $1
+./easyrsa sign-req $2 $1
 
 ls -lAR /etc/openvpn/easy-rsa/pki
 if ls /etc/openvpn/easy-rsa/pki/*.pem 1> /dev/null 2>&1; then
