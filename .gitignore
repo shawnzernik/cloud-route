@@ -14,3 +14,8 @@ temp
 database/temp.sql
 frontend/static/app/pages
 setup/cloud-route.zip
+terraform/terraform/.terraform/
+terraform/terraform/.terraform.lock.hcl
+documents/~$network-plan.xlsx
+terraform/logins/**.pem
+terraform/logins/**.sh

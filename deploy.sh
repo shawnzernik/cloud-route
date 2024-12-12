@@ -15,34 +15,14 @@ rm $HOME/.ssh/known_hosts
 
 set +x
 echo "========================================"
-echo "Cleaning"
-echo "========================================"
-set -x
-
-./clean.sh
-rm setup/cloud-route.zip
-
-set +x
-echo "========================================"
-echo "Compressing"
-echo "========================================"
-set -x
-
-zip -r setup/cloud-route.zip . \
-#    --exclude ".git/*" \
-    --exclude "postgres" \
-    --exclude "setup"
-
-set +x
-echo "========================================"
 echo "Uploading"
 echo "========================================"
 set -x
 
 if [ -e "$PASS" ]; then
-    scp -i $PASS setup/* "$USER@$HOST:~/"
+    scp -i $PASS setup/install.sh "$USER@$HOST:~/"
 else
-    scp setup/* "$USER@$HOST:~/"
+    scp setup/install.sh "$USER@$HOST:~/"
 fi
 
 set +x
