@@ -1,12 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
     "settings": {
         "cSpell.words": [
             "Aici",
+            "cloudroute",
             "qdrant",
             "securables",
             "Zernik"
