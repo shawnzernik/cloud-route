@@ -10,11 +10,11 @@ resource "aws_security_group" "cloudroute_nsg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port   = 4433
-    to_port     = 4433
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    # cidr_blocks = ["10.0.0.0/16"]
+    from_port = 4433
+    to_port   = 4433
+    protocol  = "tcp"
+    # cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
   ingress {
     from_port   = 1194
@@ -73,8 +73,9 @@ resource "aws_eip" "cloudroute_eip" {
 }
 
 resource "aws_instance" "cloudroute_vm" {
-  ami                    = "ami-0c29a2c5cf69b5a9c"
-  instance_type          = "t4g.micro" # 2 ARM cpus; 1gb RAM -- 1gb required to compile TypeScript
+  ami = "ami-0c29a2c5cf69b5a9c"
+  # instance_type          = "t4g.micro" # 2 ARM cpus; 1gb RAM -- production min
+  instance_type          = "t4g.xlarge" # 4 ARM cpus; 16gb RAM -- development
   key_name               = aws_key_pair.cloudroute_key_pair.key_name
   vpc_security_group_ids = [aws_security_group.cloudroute_nsg.id]
   subnet_id              = aws_subnet.cloudroute_network_subnet.id
