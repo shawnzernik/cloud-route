@@ -9,22 +9,6 @@ name=$3
 
 set +x
 echo "----------------------------------------"
-echo "Waiting for instance running"
-echo "----------------------------------------"
-set -x
-
-aws ec2 wait instance-running --instance-ids "$instance_id"
-
-set +x
-echo "----------------------------------------"
-echo "Waiting for instance OK"
-echo "----------------------------------------"
-set -x
-
-aws ec2 wait instance-status-ok --instance-ids "$instance_id"
-
-set +x
-echo "----------------------------------------"
 echo "Permissions on PEM files"
 echo "----------------------------------------"
 set -x
@@ -52,11 +36,27 @@ set -x
 
 chmod +x ../logins/*.sh
 
-set +x
-echo "----------------------------------------"
-echo "Run deploy script"
-echo "----------------------------------------"
-set -x
+# set +x
+# echo "----------------------------------------"
+# echo "Waiting for instance running"
+# echo "----------------------------------------"
+# set -x
 
-cd ../..
-source deploy.sh $instance_eip_address ubuntu ./terraform/logins/$name.pem
+# aws ec2 wait instance-running --instance-ids "$instance_id"
+
+# set +x
+# echo "----------------------------------------"
+# echo "Waiting for instance OK"
+# echo "----------------------------------------"
+# set -x
+
+# aws ec2 wait instance-status-ok --instance-ids "$instance_id"
+
+# set +x
+# echo "----------------------------------------"
+# echo "Run deploy script"
+# echo "----------------------------------------"
+# set -x
+
+# cd ../..
+# source deploy-to-vm.sh $instance_eip_address ubuntu ./terraform/logins/$name.pem
