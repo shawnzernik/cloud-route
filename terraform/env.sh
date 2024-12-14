@@ -18,17 +18,17 @@ export TF_VAR_ANYWHERE_CIDR="0.0.0.0/0"
 export TF_VAR_STATE_BUCKET="tfs-9d7a5655-8811-4775-8844-7245f2d038ad"
 export TF_VAR_STATE_KEY="cloud-route/state.tfstate"
 
-export TF_VAR_VPC_CIDR="192.168.0.0/16"
+export TF_VAR_VPC_CIDR="10.0.0.0/16"
 export TF_VAR_VPC_NAME="cloudroute-vpc"
 
-export TF_VAR_OPENVPN_CIDR="192.168.0.0/24"
+export TF_VAR_OPENVPN_CIDR="10.0.0.0/24"
 
 export TF_VAR_SN1_NAME="cloudroute-vpc-sn1"
-export TF_VAR_SN1_CIDR="192.168.1.0/24"
+export TF_VAR_SN1_CIDR="10.0.1.0/24"
 export TF_VAR_SN1_AZ="us-west-2a"
 
 export TF_VAR_SN2_NAME="cloudroute-vpc-sn2"
-export TF_VAR_SN2_CIDR="192.168.2.0/24"
+export TF_VAR_SN2_CIDR="10.0.2.0/24"
 export TF_VAR_SN2_AZ="us-west-2c"
 
 export TF_VAR_VM_NAME="cloudroute"
