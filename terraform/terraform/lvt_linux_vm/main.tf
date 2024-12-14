@@ -22,6 +22,10 @@ resource "aws_security_group" "lvt_linux_vm_nsg" {
       cidr_blocks = egress.value.cidr_blocks
     }
   }
+
+  tags = {
+    application = "cloudroute"
+  }
 }
 
 resource "tls_private_key" "lvt_linux_vm_tsl_private_key" {
@@ -32,16 +36,22 @@ resource "tls_private_key" "lvt_linux_vm_tsl_private_key" {
 resource "aws_key_pair" "lvt_linux_vm_aws_key_pair" {
   key_name   = var.name
   public_key = tls_private_key.lvt_linux_vm_tsl_private_key.public_key_openssh
+
+  tags = {
+    application = "cloudroute"
+  }
 }
 
 resource "local_file" "lvt_linux_vm_local_file_openssh" {
   content  = tls_private_key.lvt_linux_vm_tsl_private_key.private_key_openssh
   filename = "${path.root}/../logins/${var.name}.openssh.pem"
 }
+
 resource "local_file" "lvt_linux_vm_local_file" {
   content  = tls_private_key.lvt_linux_vm_tsl_private_key.private_key_pem
   filename = "${path.root}/../logins/${var.name}.pem"
 }
+
 resource "local_file" "lvt_linux_vm_local_file_pkcs8" {
   content  = tls_private_key.lvt_linux_vm_tsl_private_key.private_key_pem_pkcs8
   filename = "${path.root}/../logins/${var.name}.pkcs8.pem"
@@ -50,6 +60,10 @@ resource "local_file" "lvt_linux_vm_local_file_pkcs8" {
 resource "aws_eip" "lvt_linux_vm_eip" {
   count    = var.associate_public_ip_address ? 1 : 0
   instance = aws_instance.lvt_linux_vm.id
+
+  tags = {
+    application = "cloudroute"
+  }
 }
 
 resource "aws_instance" "lvt_linux_vm" {
@@ -65,7 +79,7 @@ resource "aws_instance" "lvt_linux_vm" {
     volume_size = var.root_volume_size
     volume_type = var.root_volume_type
     tags = {
-      "Name"      = "${var.name}"
+      Name        = "${var.name}"
       snapshot    = var.snapshot
       application = "cloudroute"
     }
