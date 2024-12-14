@@ -5,7 +5,7 @@ set -e
 
 env
 
-cat ./templates/etc/sysctl.conf >> sysctl.conf
+cat ./templates/etc/sysctl.conf > /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 
 mv ../temp/openvpn-nat.sh /usr/local/bin/openvpn-nat.sh

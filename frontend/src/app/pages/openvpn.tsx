@@ -242,7 +242,7 @@ class Page extends BasePage<Props, State> {
                         value={this.state.dto.clientNetwork}
                         onChange={async (value) => {
                             const newDto = this.jsonCopy(this.state.dto);
-                            newDto.caCountry = value;
+                            newDto.clientNetwork = value;
                             await this.updateState({ dto: newDto });
                         }}
                     /></Field>
