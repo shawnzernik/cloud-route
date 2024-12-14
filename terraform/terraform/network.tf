@@ -1,19 +1,72 @@
-module "lvt-root" {
-  source = "./lvt_network"
+resource "aws_vpc" "cloudroute_network" {
+  #
+  # The VPC CIDR cannot contain the OpenVPN's client CIDR.  You'll get the following error:
+  #
+  # Error: creating Route in Route Table (rtb-041cf6f04960d85d6) with destination (10.0.1.0/24): operation error EC2: CreateRoute, https response error StatusCode: 400, RequestID: ba560b0f-40c3-4df6-b578-131e9fc18b0b, api error InvalidParameterValue: Route destination doesn't match any subnet CIDR blocks.
+  #
+  # OpenVPN Clients: 10.0.1.0/24
+  # CloudRoute Network: 10.0.0.0/24
+  #
+  cidr_block           = "10.0.0.0/24"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
-  vpc_cidr_block = var.VPC_CIDR
-  vpc_name       = var.VPC_NAME
+  tags = {
+    Name        = "cloudroute-vpc"
+    Application = "cloudroute"
+  }
+}
 
-  sn1_name              = var.SN1_NAME
-  sn1_cidr_block        = var.SN1_CIDR
-  sn1_availability_zone = var.SN1_AZ
+# Subnet
+resource "aws_subnet" "cloudroute_network_subnet" {
+  vpc_id                  = aws_vpc.cloudroute_network.id
+  cidr_block              = "10.0.0.0/24"
+  availability_zone       = "us-west-2a"
+  map_public_ip_on_launch = false
 
-  sn2_name              = var.SN2_NAME
-  sn2_cidr_block        = var.SN2_CIDR
-  sn2_availability_zone = var.SN2_AZ
+  tags = {
+    Name        = "cloudroute-vpc-sn1"
+    Application = "cloudroute"
+  }
+}
 
-  region = var.REGION
+# Route Table
+resource "aws_route_table" "cloudroute_network_subnet_rt" {
+  vpc_id = aws_vpc.cloudroute_network.id
 
-  instance_network_interface_id = module.cloudroute.instance_primary_network_interface_id
-  openvpn_cidr                  = var.OPENVPN_CIDR
+  tags = {
+    Name        = "cloudroute-vpc-sn1-rt"
+    Application = "cloudroute"
+  }
+}
+resource "aws_route_table_association" "cloudroute_subnet_tra" {
+  subnet_id      = aws_subnet.cloudroute_network_subnet.id
+  route_table_id = aws_route_table.cloudroute_network_subnet_rt.id
+}
+
+# Internet Gateway
+resource "aws_internet_gateway" "cloudroute_network_igw" {
+  vpc_id = aws_vpc.cloudroute_network.id
+
+  tags = {
+    Name        = "cloudroute-vpc-igw"
+    Application = "cloudroute"
+  }
+}
+resource "aws_route" "cloudroute_network_subnet_rt_internet" {
+  route_table_id         = aws_route_table.cloudroute_network_subnet_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.cloudroute_network_igw.id
+}
+
+# S3 Buckets
+resource "aws_vpc_endpoint" "cloudroute_network_subnet_rt_s3" {
+  vpc_id          = aws_vpc.cloudroute_network.id
+  service_name    = "com.amazonaws.us-west-2.s3"
+  route_table_ids = [aws_route_table.cloudroute_network_subnet_rt.id]
+
+  tags = {
+    Name        = "cloudroute-vpc-ep"
+    Application = "cloudroute"
+  }
 }

@@ -17,6 +17,7 @@
         "emmet.showSuggestionsAsSnippets": false,
         "editor.hover.delay": 1000,
         "editor.trimAutoWhitespace": true,
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.detectIndentation": false
     }
 }

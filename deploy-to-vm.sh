@@ -10,8 +10,14 @@ export HOST="$1"
 export USER="$2"
 export PASS="$3"
 
-# this is for development - clear out old SSH connections
+set +x
+echo "========================================"
+echo "Download SSH finger print"
+echo "========================================"
+set -x
+
 rm $HOME/.ssh/known_hosts
+ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
 set +x
 echo "========================================"

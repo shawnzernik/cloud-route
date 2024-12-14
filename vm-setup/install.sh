@@ -94,8 +94,8 @@ echo "========================================"
 set -x
 pwd
 
-sudo cp /opt/cloud-route/setup/postgresql.conf /etc/postgresql/16/main/postgresql.conf
-sudo cp /opt/cloud-route/setup/pg_hba.conf /etc/postgresql/16/main/pg_hba.conf
+sudo cp /opt/cloud-route/vm-setup/postgresql.conf /etc/postgresql/16/main/postgresql.conf
+sudo cp /opt/cloud-route/vm-setup/pg_hba.conf /etc/postgresql/16/main/pg_hba.conf
 
 sudo systemctl restart postgresql
 
@@ -108,6 +108,7 @@ echo "========================================"
 set -x
 pwd
 
+cd /opt/cloud-route
 chmod +x *.sh
 ./setup.sh
 
@@ -118,8 +119,8 @@ echo "========================================"
 set -x
 pwd
 
-cd /opt/cloud-route/setup
-cp /opt/cloud-route/setup/cloud-route.service /etc/systemd/system/cloud-route.service
+cd /opt/cloud-route/vm-setup
+cp /opt/cloud-route/vm-setup/cloud-route.service /etc/systemd/system/cloud-route.service
 sudo systemctl daemon-reload
 sudo systemctl enable cloud-route
 sudo systemctl restart cloud-route
