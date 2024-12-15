@@ -60,6 +60,9 @@ Public Website:
 https://$instance_eip_address:4433
 \`\`\`
 
+- **User Name**: administrator@localhost
+- **Password**: Welcome123
+
 EOL
 
 set +x
