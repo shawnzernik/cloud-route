@@ -89,6 +89,41 @@ This will generate the certificates required for the system to work. Next we'll 
 1. Choose "Router" from the top menu, the "OpenVPN" on the left menu.
 2. Click the "Apply" button.
 
+Finally, we'll need to install the VPN on our computer.  Install 'OpenVPN Connect':
+
+- <https://openvpn.net/client/>
+
+We'll need to download the OpenVPN connection for our client.
+
+1. Login
+2. Choose "Router" form the top menu, then "Certificates" on the left menu.
+3. Under "Client Configuration", select the "Certificate" for your client.
+4. Click "Download".
+
+This will download a ZIP file.
+
+1. Extract the zip file to a folder.
+2. Open the "OpenVPN Connect" client.
+3. Drag the "client.ovpn" file onto the "OpenVPN Connect".
+4. Set the "Profile Name".
+5. Click "Connect".
+
+The VPN should connect.  Try pinging '10.0.0.1':
+
+```
+ping 10.0.0.1
+```
+
+You should see responses.
+
+Now that you are connected to the VPN, we'll want to edit the 'terraform/terraform/vm.tf' file and comment out the ingress 4433 to disable anywhere, and uncomment the CIDR for the VPC.  Run Terraform again:
+
+```
+./init.sh dev
+./plan.sh dev
+./apply.sh dev
+```
+
 ## 4. Development
 
 Once you have a VM up and running, you should be able to connect to it.  The following script will create the SSH session:
@@ -102,12 +137,30 @@ You can also install the "Remote SSH" extension in VS Code:
 You'll need to run the following to "turn off" the web server:
 
 ```
-sudo systemctl disable cloudroute
-sudo systemctl stop cloudroute
+sudo systemctl disable cloud-route
+sudo systemctl stop cloud-route
 ```
 
 You'll need to change the permissions of `/opt/couldroute`:
 
 ```
-sudo chown -R ubuntu:ubuntu /opt/cloudroute
+sudo chown -R ubuntu:ubuntu /opt/cloud-route
 ```
+
+In VS Code, open a terminal and run the following to set the frontend to recompile on change:
+
+```
+cd /opt/cloud-route
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install 20
+node -v
+npm -v
+
+cd frontend
+npm run watch
+```
+
+Now you can debug in VS Code.

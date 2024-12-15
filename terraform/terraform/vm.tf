@@ -10,11 +10,11 @@ resource "aws_security_group" "cloudroute_nsg" {
     cidr_blocks = [var.cidr_anywhere]
   }
   ingress {
-    from_port   = 4433
-    to_port     = 4433
-    protocol    = "tcp"
-    cidr_blocks = [var.cidr_anywhere]
-    # cidr_blocks = [var.cidr_vpc]
+    from_port = 4433
+    to_port   = 4433
+    protocol  = "tcp"
+    # cidr_blocks = [var.cidr_anywhere]
+    cidr_blocks = [var.cidr_vpc]
   }
   ingress {
     from_port   = 1194
