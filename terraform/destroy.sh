@@ -3,12 +3,25 @@
 set -e
 set -x
 
-. env.sh
+exit_error() {
+    echo "ERROR Invalid parameters!"
+    echo "Usage: $0 [dev|qa|prod|dr]"
+    exit 1
+}
+
+if [ -z $1 ]; then
+    exit_error
+fi
+
+. env.sh $1
 
 cd terraform
-terraform destroy -auto-approve
+terraform destroy \
+    -auto-approve \
+    -var-file="values.$1.tfvars" 
 
 cd .. 
 
-rm -R openvpn
-rm -R logins
+rm logins/*.pem
+rm logins/*.sh
+rm logins/*.md

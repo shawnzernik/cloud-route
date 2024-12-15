@@ -1,15 +1,16 @@
 #! /bin/sh
 
-cd ..
-. env.sh
-cd terraform
-
 set -x
 set -e
 
 instance_id=$1
 instance_eip_address=$2
 name=$3
+env=$4
+
+cd ..
+. env.sh $env
+cd terraform
 
 set +x
 echo "----------------------------------------"
@@ -25,10 +26,39 @@ echo "Create login script"
 echo "----------------------------------------"
 set -x
 
-cat <<EOL > ../logins/$name.sh
+cat <<EOL > ../logins/$name.$env.sh
 #! /bin/sh
 
 ssh ubuntu@$instance_eip_address -i $name.pem
+
+EOL
+
+set +x
+echo "----------------------------------------"
+echo "Create read me"
+echo "----------------------------------------"
+set -x
+
+cat <<EOL > ../logins/$name.$env.md
+# Virtual Machine
+
+## $env Environment
+
+- **Name**: $name
+- **External IP**: $instance_eip_address
+- **Instance ID**: $instance_id  
+
+SSH to Public IP:
+
+\`\`\`
+ssh ubuntu@$instance_eip_address -i $name.$env.pem
+\`\`\`
+
+Public Website:
+
+\`\`\`
+https://$instance_eip_address:4433
+\`\`\`
 
 EOL
 
@@ -63,4 +93,4 @@ echo "----------------------------------------"
 set -x
 
 cd ../..
-. deploy-to-vm.sh $instance_eip_address ubuntu ./terraform/logins/$name.pem
+. deploy-to-vm.sh $instance_eip_address ubuntu ./terraform/logins/$name.$env.pem

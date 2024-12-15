@@ -18,6 +18,7 @@
         "editor.hover.delay": 1000,
         "editor.trimAutoWhitespace": true,
         "editor.formatOnSave": true,
-        "editor.detectIndentation": false
+        "editor.detectIndentation": false,
+        "terminal.integrated.scrollback": 100000
     }
 }

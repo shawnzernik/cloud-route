@@ -18,3 +18,4 @@ terraform/terraform/.terraform.lock.hcl
 documents/~$network-plan.xlsx
 terraform/logins/**.pem
 terraform/logins/**.sh
+terraform/logins/**.md
