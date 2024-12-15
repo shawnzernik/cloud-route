@@ -28,3 +28,4 @@ systemctl enable openvpn@server
 systemctl stop openvpn@server
 set -e
 systemctl start openvpn@server
+systemctl status openvpn@server

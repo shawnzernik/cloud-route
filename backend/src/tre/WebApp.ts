@@ -23,6 +23,9 @@ export class WebApp {
         await logger.always(`Version: ${Config.appVersion}`);
         await logger.always(Config.appCopyright);
 
+        if (!fs.existsSync(Config.tempDirectory))
+            fs.mkdirSync(Config.tempDirectory);
+
         this.app.use(async (req, res, next) => {
             let corelation = "";
             if (req.headers["corelation"] && req.headers["corelation"].length === 36) {

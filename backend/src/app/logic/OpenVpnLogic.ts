@@ -108,13 +108,13 @@ export class OpenVpnLogic {
         await this.applySaveFiles(logger);
     }
     private async applySaveFiles(logger: Logger) {
-        const shellScriptName = path.join(Config.tempDirectory, "openvpn-nat.sh");
+        const shellScriptName = path.resolve(Config.tempDirectory, "openvpn-nat.sh");
         fs.writeFileSync(shellScriptName, this.ipTablesScript, { encoding: "utf8" });
 
-        const serverConfName = path.join(Config.tempDirectory, "server.conf");
+        const serverConfName = path.resolve(Config.tempDirectory, "server.conf");
         fs.writeFileSync(serverConfName, this.serverConf, { encoding: "utf8" });
 
-        const serviceName = path.join(Config.tempDirectory, "openvpn-nat.service");
+        const serviceName = path.resolve(Config.tempDirectory, "openvpn-nat.service");
         fs.writeFileSync(serviceName, this.openVpnService, { encoding: "utf8" });
 
         await SystemLogic.execute(logger, "sudo", ["bash", "./bash/apply.sh"]);
