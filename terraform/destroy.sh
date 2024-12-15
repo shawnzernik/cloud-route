@@ -22,6 +22,8 @@ terraform destroy \
 
 cd .. 
 
+set +e
+
 rm logins/*.pem
 rm logins/*.sh
 rm logins/*.md
