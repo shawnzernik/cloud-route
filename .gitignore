@@ -19,3 +19,4 @@ documents/~$network-plan.xlsx
 terraform/logins/**.pem
 terraform/logins/**.sh
 terraform/logins/**.md
+terraform/terraform/errored.tfstate
