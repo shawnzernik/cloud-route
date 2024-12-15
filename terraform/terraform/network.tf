@@ -14,7 +14,7 @@ resource "aws_vpc" "cloudroute_vpc" {
   tags = {
     Name        = "cloudroute-vpc"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
@@ -28,7 +28,7 @@ resource "aws_subnet" "cloudroute_vpc_subnet" {
   tags = {
     Name        = "cloudroute-vpc-subnet"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
@@ -39,7 +39,7 @@ resource "aws_route_table" "cloudroute_vpc_subnet_rt" {
   tags = {
     Name        = "cloudroute-vpc-subnet-rt"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 resource "aws_route_table_association" "cloudroute_subnet_tra" {
@@ -54,7 +54,7 @@ resource "aws_internet_gateway" "cloudroute_vpc_igw" {
   tags = {
     Name        = "cloudroute-vpc-igw"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 resource "aws_route" "cloudroute_vpc_subnet_rt_internet" {
@@ -72,6 +72,6 @@ resource "aws_vpc_endpoint" "cloudroute_vpc_subnet_rt_s3" {
   tags = {
     Name        = "cloudroute-vpc-ep"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }

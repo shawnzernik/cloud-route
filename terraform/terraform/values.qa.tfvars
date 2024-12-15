@@ -1,5 +1,3 @@
-environment = "dev"
-
 vpc_subnet_az = "us-west-2a"
 
 cidr_openvpn    = "10.0.1.0/24"

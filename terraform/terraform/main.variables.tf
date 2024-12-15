@@ -1,3 +1,2 @@
-variable "environment" { type = string }
-
+variable "ENVIRONMENT" { type = string }
 variable "REGION" { type = string }

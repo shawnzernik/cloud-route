@@ -13,6 +13,8 @@ if [ -z $1 ]; then
     exit_error
 fi
 
+export TF_VAR_ENVIRONMENT="$1"
+
 if [ ! -e ~/.aws-env.sh ]; then
     echo "ERROR Missing '~/.aws-env.sh'!"
     echo "Creating file"
@@ -32,11 +34,11 @@ exit_error() {
     exit 1
 }
 
-if [ -z $1 ]; then
+if [ -z \$1 ]; then
     exit_error
 fi
 
-case "$1" in
+case "\$1" in
     dev)
         export AWS_ACCESS_KEY_ID="DEV_AWS_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="DEV_AWS_SECRET_ACCESS_KEY"
@@ -69,7 +71,7 @@ case "$1" in
         export AWS_DEFAULT_REGION="us-west-2"
         ;;
     qa)
-        export TF_VAR_STATE_BUCKET="terraform-1ae708fc-c782-449c-a853-910e23f6d94e"
+        export TF_VAR_STATE_BUCKET="terraform-05522cfa-7396-44bc-a0b0-a0327f2a7db0"
         export AWS_DEFAULT_REGION="us-west-2"
         ;;
     prod)

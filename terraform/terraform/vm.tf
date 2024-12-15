@@ -10,11 +10,11 @@ resource "aws_security_group" "cloudroute_nsg" {
     cidr_blocks = [var.cidr_anywhere]
   }
   ingress {
-    from_port = 4433
-    to_port   = 4433
-    protocol  = "tcp"
-    # cidr_blocks = [var.cidr_anywhere]
-    cidr_blocks = [var.cidr_vpc]
+    from_port   = 4433
+    to_port     = 4433
+    protocol    = "tcp"
+    cidr_blocks = [var.cidr_anywhere]
+    # cidr_blocks = [var.cidr_vpc]
   }
   ingress {
     from_port   = 1194
@@ -32,7 +32,7 @@ resource "aws_security_group" "cloudroute_nsg" {
   tags = {
     Name        = "vpn-server-nsg"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
@@ -48,21 +48,21 @@ resource "aws_key_pair" "cloudroute_key_pair" {
   tags = {
     Name        = "vpn-server-key-pair"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
 resource "local_file" "cloudroute_local_file_openssh" {
   content  = tls_private_key.cloudroute_tsl_private_key.private_key_openssh
-  filename = "${path.root}/../logins/vpn-server.${var.environment}.openssh.pem"
+  filename = "${path.root}/../logins/vpn-server.${var.ENVIRONMENT}.openssh.pem"
 }
 resource "local_file" "cloudroute_local_file" {
   content  = tls_private_key.cloudroute_tsl_private_key.private_key_pem
-  filename = "${path.root}/../logins/vpn-server.${var.environment}.pem"
+  filename = "${path.root}/../logins/vpn-server.${var.ENVIRONMENT}.pem"
 }
 resource "local_file" "cloudroute_local_file_pkcs8" {
   content  = tls_private_key.cloudroute_tsl_private_key.private_key_pem_pkcs8
-  filename = "${path.root}/../logins/vpn-server.${var.environment}.pkcs8.pem"
+  filename = "${path.root}/../logins/vpn-server.${var.ENVIRONMENT}.pkcs8.pem"
 }
 
 resource "aws_eip" "cloudroute_eip" {
@@ -71,7 +71,7 @@ resource "aws_eip" "cloudroute_eip" {
   tags = {
     Name        = "vpn-server-eip"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
@@ -90,14 +90,14 @@ resource "aws_instance" "cloudroute_vm" {
     tags = {
       Name        = "vpn-server-block-device"
       Application = "cloudroute"
-      Environment = var.environment
+      Environment = var.ENVIRONMENT
     }
   }
 
   tags = {
     Name        = "vpn-server"
     Application = "cloudroute"
-    Environment = var.environment
+    Environment = var.ENVIRONMENT
   }
 }
 
@@ -111,6 +111,6 @@ resource "null_resource" "cloudroute_after_script" {
   depends_on = [aws_instance.cloudroute_vm]
 
   provisioner "local-exec" {
-    command = "./vm.after.sh ${aws_instance.cloudroute_vm.id} ${aws_eip.cloudroute_eip.public_ip} vpn-server ${var.environment}"
+    command = "./vm.after.sh ${aws_instance.cloudroute_vm.id} ${aws_eip.cloudroute_eip.public_ip} vpn-server ${var.ENVIRONMENT}"
   }
 }
